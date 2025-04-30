@@ -38,7 +38,7 @@ export default function ContactCard({ email, contact_number_1, contact_number_2,
         }
     }
     return (
-        <Card className="@container">
+        <Card className="@container mt-6">
             <CardHeader>
                 <h2 className="text-xl font-medium">Contact Details</h2>
             </CardHeader>

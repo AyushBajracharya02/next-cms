@@ -2,6 +2,7 @@ import db from "@/db";
 import ContactCard from "./Contact-Card";
 import SocialsCard from "./Socials-Card";
 import { site_settings } from "@/db/schema/site_settings";
+import CompanyDetailCard from "./Company-Details-Card";
 
 export default async function Page() {
     const [contactData] = await db
@@ -22,6 +23,7 @@ export default async function Page() {
 
     return (
         <>
+            <CompanyDetailCard />
             <ContactCard {...contactData} />
             <SocialsCard {...contactData} />
         </>
