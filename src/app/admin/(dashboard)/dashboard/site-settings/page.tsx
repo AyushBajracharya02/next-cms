@@ -6,18 +6,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { string, z } from "zod";
+import { ContactSchema, contactSchema, socialMediaSchema } from "./schema";
+import { UpdateContact } from "./actions";
 
 export default function Page() {
     const contactForm = useForm({
-        resolver: zodResolver(
-            z.object({
-                email: string().email("Enter a valid email."),
-                contact_number_1: string().length(10, "Contact Number must be 10 characters."),
-                contact_number_2: string().length(10, "Contact Number must be 10 characters."),
-                address: string(),
-            })
-        ),
+        resolver: zodResolver(contactSchema),
         defaultValues: {
             email: "",
             contact_number_1: "",
@@ -27,16 +21,7 @@ export default function Page() {
     });
 
     const socialMediaForm = useForm({
-        resolver: zodResolver(
-            z.object({
-                facebook: string(),
-                instagram: string(),
-                youtube: string(),
-                linkedin: string(),
-                tiktok: string(),
-                threads: string(),
-            })
-        ),
+        resolver: zodResolver(socialMediaSchema),
         defaultValues: {
             facebook: "",
             instagram: "",
@@ -46,6 +31,19 @@ export default function Page() {
             threads: "",
         },
     });
+
+    async function contactSubmit(values: ContactSchema) {
+        const response = await UpdateContact(values);
+        if (response?.status == 400) {
+            Object.entries(response.errors).forEach(([fields, errorMessages]) => {
+                if (!errorMessages) {
+                    return;
+                }
+                contactForm.setError(fields as keyof ContactSchema, { message: errorMessages[0] });
+            });
+        }
+    }
+
     return (
         <>
             <Card>
@@ -54,7 +52,7 @@ export default function Page() {
                 </CardHeader>
                 <CardContent>
                     <Form {...contactForm}>
-                        <form onSubmit={contactForm.handleSubmit(() => {})}>
+                        <form onSubmit={contactForm.handleSubmit(contactSubmit)}>
                             <div className="grid grid-cols-2 gap-4">
                                 <FormField
                                     control={contactForm.control}
