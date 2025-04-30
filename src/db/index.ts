@@ -5,7 +5,7 @@ const host = process.env.DATABASE_HOST;
 const database = process.env.DATABASE_NAME;
 
 if (!host || !database) {
-    throw new Error("DB_HOST and/or DB_DATABASE environment variables not set.");
+    throw new Error("DATABASE_HOST and/or DATABASE_NAME environment variables not set.");
 }
 
 export const dbCredentials = {
