@@ -1,10 +1,10 @@
+import Link from "next/link";
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
@@ -23,18 +23,18 @@ export default function AppSidebar() {
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <a href="/admin/dashboard/site-settings">
+                                    <Link href="/admin/dashboard/site-settings">
                                         <Settings />
                                         <span>Site Settings</span>
-                                    </a>
+                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <a href="/admin/dashboard/home-page">
+                                    <Link href="/admin/dashboard/home-page">
                                         <Home />
                                         <span>Home Page</span>
-                                    </a>
+                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
