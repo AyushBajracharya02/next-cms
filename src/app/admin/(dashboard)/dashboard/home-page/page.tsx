@@ -16,6 +16,10 @@ export default function Page() {
                 subtitle: z.string(),
             })
         ),
+        defaultValues: {
+            title: "",
+            subtitle: "",
+        },
     });
     return (
         <Card className="@container">
