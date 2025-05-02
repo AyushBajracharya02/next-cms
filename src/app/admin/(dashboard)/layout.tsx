@@ -5,7 +5,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main className="p-5 grow-1">{children}</main>
+            <main className="p-5 grow-1">
+                <div className="container">{children}</div>
+            </main>
         </SidebarProvider>
     );
 }

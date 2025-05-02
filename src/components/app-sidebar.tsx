@@ -11,7 +11,7 @@ import {
     SidebarMenuItem,
 } from "./ui/sidebar";
 
-import { Home, Settings } from "lucide-react";
+import { Home, Settings, Book } from "lucide-react";
 
 export default function AppSidebar() {
     return (
@@ -34,6 +34,14 @@ export default function AppSidebar() {
                                     <Link href="/admin/dashboard/home-page">
                                         <Home />
                                         <span>Home Page</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link href="/admin/dashboard/blogs">
+                                        <Book />
+                                        <span>Blogs</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>

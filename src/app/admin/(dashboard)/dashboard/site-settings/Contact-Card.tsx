@@ -9,6 +9,7 @@ import { updateContact } from "./actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Nullable } from "@/types/utility";
+import CardTitle from "@/components/admin/CardTitle";
 
 export default function ContactCard({ email, contact_number_1, contact_number_2, address }: Nullable<ContactSchema>) {
     const contactForm = useForm({
@@ -40,7 +41,7 @@ export default function ContactCard({ email, contact_number_1, contact_number_2,
     return (
         <Card className="@container mt-6">
             <CardHeader>
-                <h2 className="text-xl font-medium">Contact Details</h2>
+                <CardTitle>Contact Details</CardTitle>
             </CardHeader>
             <CardContent>
                 <Form {...contactForm}>
@@ -58,7 +59,7 @@ export default function ContactCard({ email, contact_number_1, contact_number_2,
                                         <FormMessage />
                                     </FormItem>
                                 )}
-                            />{" "}
+                            />
                             <FormField
                                 control={contactForm.control}
                                 name="contact_number_1"
