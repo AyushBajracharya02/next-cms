@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Nullable } from "@/types/utility";
 import { updateSocials } from "./actions";
+import CardTitle from "@/components/admin/CardTitle";
 
 export default function SocialsCard({ facebook, instagram, linkedin, threads, tiktok, youtube }: Nullable<SocialMediaSchema>) {
     const socialMediaForm = useForm({
@@ -46,7 +47,7 @@ export default function SocialsCard({ facebook, instagram, linkedin, threads, ti
     return (
         <Card className="@container mt-6">
             <CardHeader>
-                <h2 className="text-xl font-medium">Social Medias</h2>
+                <CardTitle>Social Medias</CardTitle>
             </CardHeader>
             <CardContent>
                 <Form {...socialMediaForm}>

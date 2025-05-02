@@ -1,5 +1,6 @@
 "use client";
 
+import CardTitle from "@/components/admin/CardTitle";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -24,7 +25,7 @@ export default function CompanyDetailCard({}) {
     return (
         <Card className="@container">
             <CardHeader>
-                <h2 className="text-xl font-medium">Company Details</h2>
+                <CardTitle>Company Details</CardTitle>
             </CardHeader>
             <CardContent>
                 <Form {...companyDetailForm}>
