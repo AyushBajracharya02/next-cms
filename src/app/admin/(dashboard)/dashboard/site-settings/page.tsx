@@ -5,7 +5,7 @@ import { site_settings } from "@/db/schema/site_settings";
 import CompanyDetailCard from "./Company-Details-Card";
 
 export default async function Page() {
-    const [contactData] = await db
+    const [companyDetails] = await db
         .select({
             email: site_settings.email,
             contact_number_1: site_settings.contact_number_1,
@@ -17,15 +17,16 @@ export default async function Page() {
             youtube: site_settings.youtube,
             linkedin: site_settings.linkedin,
             tiktok: site_settings.tiktok,
+            company_name: site_settings.company_name,
         })
         .from(site_settings)
         .limit(1);
 
     return (
         <>
-            <CompanyDetailCard />
-            <ContactCard {...contactData} />
-            <SocialsCard {...contactData} />
+            <CompanyDetailCard {...companyDetails} />
+            <ContactCard {...companyDetails} />
+            <SocialsCard {...companyDetails} />
         </>
     );
 }

@@ -1,9 +1,10 @@
 "use server";
 
 import db from "@/db";
-import { contactSchema, ContactSchema, socialMediaSchema, SocialMediaSchema } from "./schema";
+import { CompanySchema, companySchema, contactSchema, ContactSchema, socialMediaSchema, SocialMediaSchema } from "./schema";
 import { site_settings } from "@/db/schema/site_settings";
 import { ZodError } from "zod";
+import fs from "fs/promises";
 
 type UpdateReturn<T> = (
     | {
@@ -68,6 +69,51 @@ export async function updateSocials(values: SocialMediaSchema): Promise<UpdateRe
                 message: "Validation Error",
                 errors: e.flatten().fieldErrors as {
                     [K in keyof SocialMediaSchema]?: string[];
+                },
+            };
+        }
+        return {
+            status: 500,
+            message: "Internal Server Error",
+        };
+    }
+}
+
+export async function updateCompanyDetails(data: FormData): Promise<UpdateReturn<CompanySchema>> {
+    try {
+        const companyDetails = {
+            company_name: data.get("company_name") as string,
+            logo: data.get("logo") ?? undefined,
+        };
+        companySchema.parse(companyDetails);
+        if (!companyDetails.logo) {
+            delete companyDetails.logo;
+        } else {
+            //store logo as file in public folder
+            const logoFile = companyDetails.logo as File;
+            const arrayBuffer = await logoFile.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const filePath = `public/uploads/${logoFile.name}`;
+            await fs.writeFile(filePath, buffer);
+            companyDetails.logo = `/uploads/${logoFile.name}`;
+        }
+        const [currentValues] = await db.select().from(site_settings).limit(1);
+        if (currentValues) {
+            await db.update(site_settings).set({ ...companyDetails, updated_at: new Date() });
+        } else {
+            await db.insert(site_settings).values({ ...companyDetails, updated_at: new Date() });
+        }
+        return {
+            status: 200,
+            message: "Company details updated successfully.",
+        };
+    } catch (e) {
+        if (e instanceof ZodError) {
+            return {
+                status: 400,
+                message: "Validation Error",
+                errors: e.flatten().fieldErrors as {
+                    [K in keyof CompanySchema]?: string[];
                 },
             };
         }

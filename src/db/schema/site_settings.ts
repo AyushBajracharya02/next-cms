@@ -17,4 +17,6 @@ export const site_settings = mysqlTable("site_settings", {
     youtube: varchar({ length: 2048 }),
     tiktok: varchar({ length: 2048 }),
     threads: varchar({ length: 2048 }),
+    company_name: varchar({ length: 256 }).notNull().default(""),
+    logo: varchar({ length: 2048 }),
 });

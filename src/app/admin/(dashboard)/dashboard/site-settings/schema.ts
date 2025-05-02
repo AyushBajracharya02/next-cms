@@ -26,5 +26,15 @@ export const socialMediaSchema = z.object({
     threads: string(),
 });
 
+export const companySchema = z.object({
+    logo: z
+        .instanceof(File)
+        .refine(file => file.size <= 2 * 1024 * 1024, { message: "File size should be less than 2MB." })
+        .refine(file => file.type.startsWith("image/"), { message: "File type should be an image." })
+        .optional(),
+    company_name: z.string().min(1, "Company Name is required."),
+});
+
 export type ContactSchema = z.infer<typeof contactSchema>;
 export type SocialMediaSchema = z.infer<typeof socialMediaSchema>;
+export type CompanySchema = z.infer<typeof companySchema>;
