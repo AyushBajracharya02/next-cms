@@ -1,6 +1,7 @@
 "use client";
 
 import CardTitle from "@/components/admin/CardTitle";
+import Tiptap from "@/components/admin/TipTap";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -66,7 +67,9 @@ export default function Page() {
                                     render={({ field }) => (
                                         <FormItem className="grid grid-cols-[100px_1fr] items-start">
                                             <FormLabel>Content</FormLabel>
-                                            <FormControl></FormControl>
+                                            <FormControl>
+                                                <Tiptap />
+                                            </FormControl>
                                             <FormMessage className="col-start-2" />
                                         </FormItem>
                                     )}

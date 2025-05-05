@@ -25,9 +25,21 @@ export default async function Page() {
 
     return (
         <>
-            <CompanyDetailCard {...companyDetails} />
-            <ContactCard {...companyDetails} />
-            <SocialsCard {...companyDetails} />
+            <CompanyDetailCard company_name={companyDetails.company_name} logo={companyDetails.logo} />
+            <ContactCard
+                address={companyDetails.address}
+                contact_number_1={companyDetails.contact_number_1}
+                contact_number_2={companyDetails.contact_number_2}
+                email={companyDetails.email}
+            />
+            <SocialsCard
+                facebook={companyDetails.facebook}
+                instagram={companyDetails.instagram}
+                linkedin={companyDetails.linkedin}
+                threads={companyDetails.threads}
+                tiktok={companyDetails.tiktok}
+                youtube={companyDetails.youtube}
+            />
         </>
     );
 }

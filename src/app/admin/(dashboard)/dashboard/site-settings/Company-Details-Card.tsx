@@ -20,7 +20,6 @@ export default function CompanyDetailCard({ company_name, logo }: Nullable<Omit<
             logo: undefined,
         },
     });
-    console.log(logo);
 
     async function submitCompanyDetails(data: CompanySchema) {
         const formData = new FormData();
