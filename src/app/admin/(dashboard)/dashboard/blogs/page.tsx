@@ -38,7 +38,7 @@ export default function Page() {
                                     control={blogForm.control}
                                     name="title"
                                     render={({ field }) => (
-                                        <FormItem className="grid grid-cols-[100px_1fr]">
+                                        <FormItem className="grid grid-cols-[100px_1fr] items-start">
                                             <FormLabel>Title</FormLabel>
                                             <FormControl>
                                                 <Input {...field} />
@@ -51,7 +51,7 @@ export default function Page() {
                                     control={blogForm.control}
                                     name="author"
                                     render={({ field }) => (
-                                        <FormItem className="grid grid-cols-[100px_1fr]">
+                                        <FormItem className="grid grid-cols-[100px_1fr] items-start">
                                             <FormLabel>Author</FormLabel>
                                             <FormControl>
                                                 <Input {...field} />
@@ -64,11 +64,9 @@ export default function Page() {
                                     control={blogForm.control}
                                     name="content"
                                     render={({ field }) => (
-                                        <FormItem className="grid grid-cols-[100px_1fr]">
+                                        <FormItem className="grid grid-cols-[100px_1fr] items-start">
                                             <FormLabel>Content</FormLabel>
-                                            <FormControl>
-                                                <Input {...field} />
-                                            </FormControl>
+                                            <FormControl></FormControl>
                                             <FormMessage className="col-start-2" />
                                         </FormItem>
                                     )}

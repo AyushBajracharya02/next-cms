@@ -10,15 +10,18 @@ import { useForm } from "react-hook-form";
 import { companySchema, CompanySchema } from "./schema";
 import { updateCompanyDetails } from "./actions";
 import { Nullable } from "@/types/utility";
+import Image from "next/image";
 
-export default function CompanyDetailCard({ company_name, logo }: Nullable<CompanySchema>) {
+export default function CompanyDetailCard({ company_name, logo }: Nullable<Omit<CompanySchema, "logo"> & { logo: string | null }>) {
     const companyDetailForm = useForm({
         resolver: zodResolver(companySchema),
         defaultValues: {
             company_name: company_name ?? "",
-            logo: logo ?? undefined,
+            logo: undefined,
         },
     });
+    console.log(logo);
+
     async function submitCompanyDetails(data: CompanySchema) {
         const formData = new FormData();
         formData.append("company_name", data.company_name);
@@ -28,7 +31,6 @@ export default function CompanyDetailCard({ company_name, logo }: Nullable<Compa
         try {
             const response = await updateCompanyDetails(formData);
             if (response.status === 200) {
-                console.log("updated");
             }
             if (response.status === 400) {
                 Object.entries(response.errors).forEach(([fields, errorMessages]) => {
@@ -93,6 +95,13 @@ export default function CompanyDetailCard({ company_name, logo }: Nullable<Compa
                                     </FormItem>
                                 )}
                             />
+                            <div className="border border-input rounded-md row-span-3 p-4 content-center dark:bg-input/30">
+                                {logo ? (
+                                    <Image className="mx-auto" src={logo} alt="" width={100} height={50} />
+                                ) : (
+                                    <h3 className="text-sm font-medium text-center">No Logo Uploaded</h3>
+                                )}
+                            </div>
                         </div>
                         <Button className="mt-4">Submit</Button>
                     </form>

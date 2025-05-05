@@ -18,6 +18,7 @@ export default async function Page() {
             linkedin: site_settings.linkedin,
             tiktok: site_settings.tiktok,
             company_name: site_settings.company_name,
+            logo: site_settings.logo,
         })
         .from(site_settings)
         .limit(1);

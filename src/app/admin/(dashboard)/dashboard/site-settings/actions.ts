@@ -86,22 +86,21 @@ export async function updateCompanyDetails(data: FormData): Promise<UpdateReturn
             logo: data.get("logo") ?? undefined,
         };
         companySchema.parse(companyDetails);
-        if (!companyDetails.logo) {
-            delete companyDetails.logo;
-        } else {
+        let logo: string | undefined = undefined;
+        if (companyDetails.logo) {
             //store logo as file in public folder
             const logoFile = companyDetails.logo as File;
             const arrayBuffer = await logoFile.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
             const filePath = `public/uploads/${logoFile.name}`;
             await fs.writeFile(filePath, buffer);
-            companyDetails.logo = `/uploads/${logoFile.name}`;
+            logo = `/uploads/${logoFile.name}`;
         }
         const [currentValues] = await db.select().from(site_settings).limit(1);
         if (currentValues) {
-            await db.update(site_settings).set({ ...companyDetails, updated_at: new Date() });
+            await db.update(site_settings).set({ ...companyDetails, logo, updated_at: new Date() });
         } else {
-            await db.insert(site_settings).values({ ...companyDetails, updated_at: new Date() });
+            await db.insert(site_settings).values({ ...companyDetails, logo, updated_at: new Date() });
         }
         return {
             status: 200,
@@ -117,6 +116,8 @@ export async function updateCompanyDetails(data: FormData): Promise<UpdateReturn
                 },
             };
         }
+        console.log(e);
+
         return {
             status: 500,
             message: "Internal Server Error",
