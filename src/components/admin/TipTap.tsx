@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditor, EditorContent, Editor, useEditorState, Content } from "@tiptap/react";
+import { useEditor, EditorContent, Editor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import UnderlineExtension from "@tiptap/extension-underline";
@@ -26,7 +26,7 @@ import {
     Link as LinkIcon,
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 
 function MenuBar({ editor }: { editor: Editor }) {
@@ -383,6 +383,12 @@ export default function Tiptap({
         content: value,
         onUpdate: ({ editor }) => onChange(editor.getHTML()),
     });
+
+    useEffect(() => {
+        if (editor && editor.getHTML() !== value) {
+            editor.commands.setContent(value);
+        }
+    }, [value, editor]);
 
     if (!editor) {
         return null;

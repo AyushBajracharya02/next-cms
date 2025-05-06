@@ -12,3 +12,4 @@ export const blogSchema = z.object({
 });
 
 export type BlogSchema = z.infer<typeof blogSchema>;
+export type Blog = Omit<BlogSchema, "content"> & { id: number } & { active_status: boolean };

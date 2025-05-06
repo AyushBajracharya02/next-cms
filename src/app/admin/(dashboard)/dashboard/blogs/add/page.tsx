@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { BlogSchema, blogSchema } from "../schema";
 import { storeBlog } from "../actions";
+import { toast } from "sonner";
 
 export default function Page() {
     const blogForm = useForm({
@@ -23,7 +24,33 @@ export default function Page() {
     async function submitBlog(values: BlogSchema) {
         try {
             const response = await storeBlog(values);
-        } catch (error) {}
+            if (response.status === 200) {
+                toast(response.message, {
+                    closeButton: true,
+                    className: "!bg-green-700",
+                });
+                blogForm.reset();
+            }
+            if (response.status === 400) {
+                Object.entries(response.errors).forEach(([fields, errorMessages]) => {
+                    if (!errorMessages) {
+                        return;
+                    }
+                    blogForm.setError(fields as keyof BlogSchema, { message: errorMessages[0] });
+                });
+            }
+            if (response.status === 500) {
+                toast(response.message, {
+                    closeButton: true,
+                    className: "!bg-red-800",
+                });
+            }
+        } catch (error) {
+            toast((error as Error).message, {
+                closeButton: true,
+                className: "!bg-red-800",
+            });
+        }
     }
     return (
         <>

@@ -11,6 +11,7 @@ import { companySchema, CompanySchema } from "./schema";
 import { updateCompanyDetails } from "./actions";
 import { Nullable } from "@/types/utility";
 import Image from "next/image";
+import { toast } from "sonner";
 
 export default function CompanyDetailCard({ company_name, logo }: Nullable<Omit<CompanySchema, "logo"> & { logo: string | null }>) {
     const companyDetailForm = useForm({
@@ -30,6 +31,10 @@ export default function CompanyDetailCard({ company_name, logo }: Nullable<Omit<
         try {
             const response = await updateCompanyDetails(formData);
             if (response.status === 200) {
+                toast(response.message, {
+                    closeButton: true,
+                    className: "!bg-green-700",
+                });
             }
             if (response.status === 400) {
                 Object.entries(response.errors).forEach(([fields, errorMessages]) => {
@@ -40,10 +45,16 @@ export default function CompanyDetailCard({ company_name, logo }: Nullable<Omit<
                 });
             }
             if (response.status === 500) {
-                console.log("Internal Server Error");
+                toast(response.message, {
+                    closeButton: true,
+                    className: "!bg-red-800",
+                });
             }
         } catch (error) {
-            console.log(error);
+            toast((error as Error).message, {
+                closeButton: true,
+                className: "!bg-red-800",
+            });
         }
     }
     return (

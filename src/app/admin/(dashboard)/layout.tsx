@@ -1,5 +1,6 @@
 import AppSidebar from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -8,6 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <main className="p-5 grow-1">
                 <div className="container">{children}</div>
             </main>
+            <Toaster />
         </SidebarProvider>
     );
 }

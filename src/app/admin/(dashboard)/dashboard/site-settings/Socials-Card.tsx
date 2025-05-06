@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { Nullable } from "@/types/utility";
 import { updateSocials } from "./actions";
 import CardTitle from "@/components/admin/CardTitle";
+import { toast } from "sonner";
 
 export default function SocialsCard({ facebook, instagram, linkedin, threads, tiktok, youtube }: Nullable<SocialMediaSchema>) {
     const socialMediaForm = useForm({
@@ -29,7 +30,10 @@ export default function SocialsCard({ facebook, instagram, linkedin, threads, ti
             socialMediaSchema.parse(values);
             const response = await updateSocials(values);
             if (response.status === 200) {
-                console.log("updated");
+                toast(response.message, {
+                    closeButton: true,
+                    className: "!bg-green-700",
+                });
             }
             if (response.status === 400) {
                 Object.entries(response.errors).forEach(([fields, errorMessages]) => {
@@ -40,9 +44,17 @@ export default function SocialsCard({ facebook, instagram, linkedin, threads, ti
                 });
             }
             if (response.status === 500) {
-                console.log("Internal Server Error");
+                toast(response.message, {
+                    closeButton: true,
+                    className: "!bg-red-800",
+                });
             }
-        } catch (e) {}
+        } catch (e) {
+            toast((e as Error).message, {
+                closeButton: true,
+                className: "!bg-red-800",
+            });
+        }
     }
     return (
         <Card className="@container mt-6">

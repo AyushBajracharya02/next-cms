@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Nullable } from "@/types/utility";
 import CardTitle from "@/components/admin/CardTitle";
+import { toast } from "sonner";
 
 export default function ContactCard({ email, contact_number_1, contact_number_2, address }: Nullable<ContactSchema>) {
     const contactForm = useForm({
@@ -22,20 +23,33 @@ export default function ContactCard({ email, contact_number_1, contact_number_2,
         },
     });
     async function contactSubmit(values: ContactSchema) {
-        const response = await updateContact(values);
-        if (response.status === 200) {
-            console.log("updated");
-        }
-        if (response.status === 400) {
-            Object.entries(response.errors).forEach(([fields, errorMessages]) => {
-                if (!errorMessages) {
-                    return;
-                }
-                contactForm.setError(fields as keyof ContactSchema, { message: errorMessages[0] });
+        try {
+            const response = await updateContact(values);
+            if (response.status === 200) {
+                toast(response.message, {
+                    closeButton: true,
+                    className: "!bg-green-700",
+                });
+            }
+            if (response.status === 400) {
+                Object.entries(response.errors).forEach(([fields, errorMessages]) => {
+                    if (!errorMessages) {
+                        return;
+                    }
+                    contactForm.setError(fields as keyof ContactSchema, { message: errorMessages[0] });
+                });
+            }
+            if (response.status === 500) {
+                toast(response.message, {
+                    closeButton: true,
+                    className: "!bg-red-800",
+                });
+            }
+        } catch (error) {
+            toast((error as Error).message, {
+                closeButton: true,
+                className: "!bg-red-800",
             });
-        }
-        if (response.status === 500) {
-            console.log("Internal Server Error");
         }
     }
     return (
