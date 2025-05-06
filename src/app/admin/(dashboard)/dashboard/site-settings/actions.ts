@@ -5,21 +5,9 @@ import { CompanySchema, companySchema, contactSchema, ContactSchema, socialMedia
 import { site_settings } from "@/db/schema/site_settings";
 import { ZodError } from "zod";
 import fs from "fs/promises";
+import { ServerResponse } from "@/types/utility";
 
-type UpdateReturn<T> = (
-    | {
-          status: 200;
-      }
-    | { status: 500 }
-    | {
-          status: 400;
-          errors: {
-              [k in keyof T]?: string[];
-          };
-      }
-) & { message: string };
-
-export async function updateContact(values: ContactSchema): Promise<UpdateReturn<ContactSchema>> {
+export async function updateContact(values: ContactSchema): Promise<ServerResponse<ContactSchema>> {
     try {
         contactSchema.parse(values);
         const [currentValues] = await db.select().from(site_settings).limit(1);
@@ -49,7 +37,7 @@ export async function updateContact(values: ContactSchema): Promise<UpdateReturn
     }
 }
 
-export async function updateSocials(values: SocialMediaSchema): Promise<UpdateReturn<SocialMediaSchema>> {
+export async function updateSocials(values: SocialMediaSchema): Promise<ServerResponse<SocialMediaSchema>> {
     try {
         socialMediaSchema.parse(values);
         const [currentValues] = await db.select().from(site_settings).limit(1);
@@ -79,7 +67,7 @@ export async function updateSocials(values: SocialMediaSchema): Promise<UpdateRe
     }
 }
 
-export async function updateCompanyDetails(data: FormData): Promise<UpdateReturn<CompanySchema>> {
+export async function updateCompanyDetails(data: FormData): Promise<ServerResponse<CompanySchema>> {
     try {
         const companyDetails = {
             company_name: data.get("company_name") as string,
@@ -116,7 +104,6 @@ export async function updateCompanyDetails(data: FormData): Promise<UpdateReturn
                 },
             };
         }
-        console.log(e);
 
         return {
             status: 500,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditor, EditorContent, Editor, useEditorState } from "@tiptap/react";
+import { useEditor, EditorContent, Editor, useEditorState, Content } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import UnderlineExtension from "@tiptap/extension-underline";
@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { useCallback } from "react";
+import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 
 function MenuBar({ editor }: { editor: Editor }) {
     const editorState = useEditorState({
@@ -81,7 +82,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleBlockquote().run}
+                            onClick={() => editor.chain().focus().toggleBlockquote().run()}
                             disabled={!editor.can().chain().focus().toggleBlockquote().run()}
                             variant={editorState.isBlockquote ? "default" : "outline"}
                         >
@@ -98,7 +99,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleCode().run}
+                            onClick={() => editor.chain().focus().toggleCode().run()}
                             disabled={!editor.can().chain().focus().toggleCode().run()}
                             variant={editorState.isCode ? "default" : "outline"}
                         >
@@ -115,7 +116,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleCodeBlock().run}
+                            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                             disabled={!editor.can().chain().focus().toggleCodeBlock().run()}
                             variant={editorState.isCodeBlock ? "default" : "outline"}
                         >
@@ -132,7 +133,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleBold().run}
+                            onClick={() => editor.chain().focus().toggleBold().run()}
                             disabled={!editor.can().chain().focus().toggleBold().run()}
                             variant={editorState.isBold ? "default" : "outline"}
                         >
@@ -149,7 +150,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleItalic().run}
+                            onClick={() => editor.chain().focus().toggleItalic().run()}
                             disabled={!editor.can().chain().focus().toggleItalic().run()}
                             variant={editorState.isItalic ? "default" : "outline"}
                         >
@@ -166,7 +167,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleUnderline().run}
+                            onClick={() => editor.chain().focus().toggleUnderline().run()}
                             disabled={!editor.can().chain().focus().toggleUnderline().run()}
                             variant={editorState.isUnderLine ? "default" : "outline"}
                         >
@@ -183,7 +184,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleStrike().run}
+                            onClick={() => editor.chain().focus().toggleStrike().run()}
                             disabled={!editor.can().chain().focus().toggleStrike().run()}
                             variant={editorState.isStrike ? "default" : "outline"}
                         >
@@ -200,7 +201,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleOrderedList().run}
+                            onClick={() => editor.chain().focus().toggleOrderedList().run()}
                             disabled={!editor.can().chain().focus().toggleOrderedList().run()}
                             variant={editorState.isOrderedList ? "default" : "outline"}
                         >
@@ -217,7 +218,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleBulletList().run}
+                            onClick={() => editor.chain().focus().toggleBulletList().run()}
                             disabled={!editor.can().chain().focus().toggleBulletList().run()}
                             variant={editorState.isBulletList ? "default" : "outline"}
                         >
@@ -234,7 +235,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleHeading({ level: 1 }).run}
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
                             disabled={!editor.can().chain().focus().toggleHeading({ level: 1 }).run()}
                             variant={editorState.isHeading1 ? "default" : "outline"}
                         >
@@ -251,7 +252,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleHeading({ level: 2 }).run}
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                             disabled={!editor.can().chain().focus().toggleHeading({ level: 2 }).run()}
                             variant={editorState.isHeading2 ? "default" : "outline"}
                         >
@@ -268,7 +269,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleHeading({ level: 3 }).run}
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
                             disabled={!editor.can().chain().focus().toggleHeading({ level: 3 }).run()}
                             variant={editorState.isHeading3 ? "default" : "outline"}
                         >
@@ -285,7 +286,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleHeading({ level: 4 }).run}
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
                             disabled={!editor.can().chain().focus().toggleHeading({ level: 4 }).run()}
                             variant={editorState.isHeading4 ? "default" : "outline"}
                         >
@@ -302,7 +303,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleHeading({ level: 5 }).run}
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
                             disabled={!editor.can().chain().focus().toggleHeading({ level: 5 }).run()}
                             variant={editorState.isHeading5 ? "default" : "outline"}
                         >
@@ -319,7 +320,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().toggleHeading({ level: 6 }).run}
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
                             disabled={!editor.can().chain().focus().toggleHeading({ level: 6 }).run()}
                             variant={editorState.isHeading6 ? "default" : "outline"}
                         >
@@ -348,7 +349,7 @@ function MenuBar({ editor }: { editor: Editor }) {
                     <TooltipTrigger asChild>
                         <Button
                             type="button"
-                            onClick={editor.chain().focus().setHorizontalRule().run}
+                            onClick={() => editor.chain().focus().setHorizontalRule().run()}
                             disabled={!editor.can().chain().focus().setHorizontalRule().run()}
                             variant="outline"
                         >
@@ -364,10 +365,23 @@ function MenuBar({ editor }: { editor: Editor }) {
     );
 }
 
-export default function Tiptap() {
+export default function Tiptap({
+    value,
+    onChange,
+    invalid,
+}: ControllerRenderProps<
+    {
+        content: string;
+        title: string;
+        author: string;
+    },
+    "content"
+> &
+    ControllerFieldState) {
     const editor = useEditor({
         extensions: [StarterKit, HorizontalRule, UnderlineExtension, LinkExtension],
-        content: "<H1>Hello World! 🌎️</H1>",
+        content: value,
+        onUpdate: ({ editor }) => onChange(editor.getHTML()),
     });
 
     if (!editor) {
@@ -377,10 +391,13 @@ export default function Tiptap() {
     return (
         <div>
             <MenuBar editor={editor} />
-            <EditorContent
-                className="mt-4 border border-input bg-input/30 rounded-md p-4 has-[.ProseMirror-focused]:border-ring has-[.ProseMirror-focused]:ring-ring/50 has-[.ProseMirror-focused]:ring-[3px] [&_.ProseMirror]:focus-visible:outline-0 prose prose-invert max-w-[unset]"
-                editor={editor}
-            />
+            <div
+                className={`mt-4 border ${
+                    invalid ? "!border-destructive has-[.ProseMirror-focused]:!ring-destructive/20" : "border-input"
+                } bg-input/30 rounded-md p-4 has-[.ProseMirror-focused]:border-ring has-[.ProseMirror-focused]:ring-ring/50 has-[.ProseMirror-focused]:ring-[3px] [&_.ProseMirror]:focus-visible:outline-0 transition-[color,box-shadow]`}
+            >
+                <EditorContent className=" prose prose-invert max-w-[unset]" editor={editor} />
+            </div>
         </div>
     );
 }
