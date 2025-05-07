@@ -32,7 +32,7 @@ export async function storeBlog(value: BlogSchema): Promise<ServerResponse<BlogS
     }
 }
 
-export async function updateBlog(value: Partial<Blog> & { id: number }) {
+export async function updateBlog(value: Blog) {
     try {
         blogSchema
             .partial()

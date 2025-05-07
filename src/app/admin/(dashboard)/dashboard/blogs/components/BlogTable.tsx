@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { updateBlog } from "../actions";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function BlogTable({ blogs }: { blogs: Blog[] }) {
     const columns: ColumnDef<Blog>[] = [
@@ -26,6 +27,15 @@ export default function BlogTable({ blogs }: { blogs: Blog[] }) {
             accessorKey: "active_status",
             header: "Active",
             cell: ({ row }) => <BlogSwitch row={row} />,
+        },
+        {
+            accessorKey: "actions",
+            header: "Actions",
+            cell: ({ row }) => (
+                <>
+                    <Link href={`/admin/dashboard/blogs/edit/${row.original.id}`}>Edit</Link>
+                </>
+            ),
         },
     ];
     return <DataTable columns={columns} data={blogs} />;
