@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { signUp } from "./actions";
 import { SignupSchema, signupSchema } from "./schema";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import Link from "next/link";
 
 export default function SignUpPage() {
     const form = useForm({
@@ -24,8 +26,6 @@ export default function SignUpPage() {
     async function onSubmit(values: SignupSchema) {
         try {
             const response = await signUp(values);
-
-            console.log(response);
 
             //validation errors
             if (response.status === 400) {
@@ -43,7 +43,7 @@ export default function SignUpPage() {
                 router.push("/admin/dashboard");
             }
         } catch (error) {
-            console.log(error);
+            toast((error as Error).message);
         }
     }
     return (
@@ -112,6 +112,14 @@ export default function SignUpPage() {
                             <Button className="block mx-auto">Sign Up</Button>
                         </form>
                     </Form>
+                    <div className="mt-4">
+                        <p className="text-center text-sm">
+                            <span>Already have an account? </span>
+                            <Link className="underline" href="/admin/login">
+                                Log In
+                            </Link>
+                        </p>
+                    </div>
                 </CardContent>
             </Card>
         </section>

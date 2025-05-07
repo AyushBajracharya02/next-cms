@@ -9,6 +9,8 @@ import { LoginSchema, loginSchema } from "./schema";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import Link from "next/link";
 
 export default function Login() {
     const form = useForm({
@@ -44,7 +46,7 @@ export default function Login() {
                 router.push("/admin/dashboard");
             }
         } catch (e) {
-            console.log(e);
+            toast((e as Error).message);
         }
     }
     return (
@@ -76,7 +78,12 @@ export default function Login() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Password</FormLabel>
+                                        <div className="flex justify-between">
+                                            <FormLabel>Password</FormLabel>
+                                            <Link className="text-sm leading-none font-medium" href="admin/forgot-password">
+                                                Forgot Password?
+                                            </Link>
+                                        </div>
                                         <FormControl>
                                             <Input placeholder="Password" type="password" {...field} />
                                         </FormControl>
@@ -87,6 +94,14 @@ export default function Login() {
                             <Button className="block mx-auto">Log in</Button>
                         </form>
                     </Form>
+                    <div className="mt-4">
+                        <p className="text-center text-sm">
+                            <span>Don&apos;t have an account? </span>
+                            <Link className="underline" href="/admin/signup">
+                                Sign Up
+                            </Link>
+                        </p>
+                    </div>
                 </CardContent>
             </Card>
         </section>

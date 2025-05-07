@@ -32,7 +32,7 @@ export async function storeBlog(value: BlogSchema): Promise<ServerResponse<BlogS
     }
 }
 
-export async function updateBlog(value: Blog) {
+export async function updateBlog(value: Blog): Promise<ServerResponse<Blog>> {
     try {
         blogSchema
             .partial()
@@ -51,7 +51,7 @@ export async function updateBlog(value: Blog) {
                 status: 400,
                 message: "Validation Error",
                 errors: e.flatten().fieldErrors as {
-                    [K in keyof BlogSchema]?: string[];
+                    [K in keyof Blog]?: string[];
                 },
             };
         }

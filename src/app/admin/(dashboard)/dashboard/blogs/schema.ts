@@ -11,10 +11,14 @@ export const blogSchema = z.object({
         }),
 });
 
-export const blogUpdateSchema = blogSchema.partial().extend({
-    active_status: z.boolean(),
-    id: z.number(),
-});
+export const blogUpdateSchema = blogSchema
+    .extend({
+        active_status: z.boolean(),
+    })
+    .partial()
+    .extend({
+        id: z.number(),
+    });
 
 export type BlogSchema = z.infer<typeof blogSchema>;
 export type Blog = z.infer<typeof blogUpdateSchema>;
