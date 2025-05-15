@@ -1,8 +1,8 @@
-import { char, mysqlTable, varchar } from "drizzle-orm/mysql-core";
+import { char, int, mysqlTable, varchar } from "drizzle-orm/mysql-core";
 import { timestamps } from "./common";
 
 export const site_settings = mysqlTable("site_settings", {
-    ...timestamps,
+    id: int().primaryKey().autoincrement(),
     email: varchar({ length: 256 }),
     contact_number_1: char({
         length: 10,
@@ -19,4 +19,5 @@ export const site_settings = mysqlTable("site_settings", {
     threads: varchar({ length: 2048 }),
     company_name: varchar({ length: 256 }).notNull().default(""),
     logo: varchar({ length: 2048 }),
+    ...timestamps,
 });

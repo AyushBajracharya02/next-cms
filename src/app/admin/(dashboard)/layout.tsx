@@ -16,7 +16,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <SidebarProvider>
             <AppSidebar />
             <main className="p-5 grow-1">
-                <Header session={session} />
+                <div className="container">
+                    <Header session={session} />
+                </div>
                 <div className="container mt-4">{children}</div>
             </main>
             <Toaster />

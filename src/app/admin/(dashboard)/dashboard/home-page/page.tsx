@@ -1,62 +1,9 @@
-"use client";
+import { homepageTable } from "@/db/schema/homepage";
+import BannerContentCard from "./Banner-Content-Card";
+import db from "@/db/index";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-export default function Page() {
-    const bannerForm = useForm({
-        resolver: zodResolver(
-            z.object({
-                title: z.string(),
-                subtitle: z.string(),
-            })
-        ),
-        defaultValues: {
-            title: "",
-            subtitle: "",
-        },
-    });
-    return (
-        <Card className="@container">
-            <CardHeader>Banner Content</CardHeader>
-            <CardContent>
-                <Form {...bannerForm}>
-                    <form onSubmit={bannerForm.handleSubmit(() => {})}>
-                        <div className="grid grid-cols-1 @3xl:grid-cols-2 @5xl:grid-cols-4 gap-4">
-                            <FormField
-                                name="title"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Title</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                name="subtitle"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Subtitle</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                        <Button className="mt-4">Submit</Button>
-                    </form>
-                </Form>
-            </CardContent>
-        </Card>
-    );
+export default async function Page() {
+    let [homepageContent] = await db.select().from(homepageTable).limit(1);
+    homepageContent = homepageContent ?? {};
+    return <BannerContentCard banner_title={homepageContent.banner_title} banner_subtitle={homepageContent.banner_subtitle} />;
 }

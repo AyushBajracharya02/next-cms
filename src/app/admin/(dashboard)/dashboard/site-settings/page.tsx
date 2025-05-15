@@ -5,7 +5,7 @@ import { site_settings } from "@/db/schema/site_settings";
 import CompanyDetailCard from "./Company-Details-Card";
 
 export default async function Page() {
-    const [companyDetails] = await db
+    let [companyDetails] = await db
         .select({
             email: site_settings.email,
             contact_number_1: site_settings.contact_number_1,
@@ -22,6 +22,8 @@ export default async function Page() {
         })
         .from(site_settings)
         .limit(1);
+
+    companyDetails = companyDetails ?? {};
 
     return (
         <>
