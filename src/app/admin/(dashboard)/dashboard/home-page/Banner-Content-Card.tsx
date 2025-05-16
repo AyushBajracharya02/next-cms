@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Nullable } from "@/types/utility";
+import CardTitle from "@/components/admin/CardTitle";
 
 export default function BannerContentCard({ banner_title, banner_subtitle }: Nullable<Omit<BannerContentSchema, "logo">>) {
     const bannerForm = useForm({
@@ -56,7 +57,9 @@ export default function BannerContentCard({ banner_title, banner_subtitle }: Nul
     }
     return (
         <Card className="@container">
-            <CardHeader>Banner Content</CardHeader>
+            <CardHeader>
+                <CardTitle>Banner Content</CardTitle>
+            </CardHeader>
             <CardContent>
                 <Form {...bannerForm}>
                     <form onSubmit={bannerForm.handleSubmit(submitBannerContent)}>

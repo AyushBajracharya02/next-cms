@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { useCallback, useEffect } from "react";
-import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
+import { ControllerFieldState, ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 
 function MenuBar({ editor }: { editor: Editor }) {
     const editorState = useEditorState({
@@ -365,22 +365,13 @@ function MenuBar({ editor }: { editor: Editor }) {
     );
 }
 
-export default function Tiptap({
-    value,
-    onChange,
-    invalid,
-}: ControllerRenderProps<
-    {
-        content: string;
-        title: string;
-        author: string;
-    },
-    "content"
-> &
-    ControllerFieldState) {
+type TipTapProps<T extends FieldValues, K extends Path<T>> = ControllerRenderProps<T, K> & ControllerFieldState;
+
+export default function Tiptap<T extends FieldValues, K extends Path<T>>({ value, onChange, invalid }: TipTapProps<T, K>) {
     const editor = useEditor({
         extensions: [StarterKit, HorizontalRule, UnderlineExtension, LinkExtension],
         content: value,
+        immediatelyRender: false,
         onUpdate: ({ editor }) => onChange(editor.getHTML()),
     });
 

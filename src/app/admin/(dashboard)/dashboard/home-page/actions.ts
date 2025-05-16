@@ -1,7 +1,7 @@
 "use server";
 
 import { ServerResponse } from "@/types/utility";
-import { BannerContentSchema, bannerContentSchema } from "./schema";
+import { BannerContentSchema, bannerContentSchema, purposeContentSchema, PurposeContentSchema } from "./schema";
 import { ZodError } from "zod";
 import db from "@/db";
 import fs from "fs/promises";
@@ -49,6 +49,30 @@ export async function storeBannerContent(values: BannerContentSchema): Promise<S
         return {
             status: 500,
             message: "Internal Server Error",
+        };
+    }
+}
+
+export async function storePurposeSectionContent(values: PurposeContentSchema): Promise<ServerResponse<PurposeContentSchema>> {
+    try {
+        purposeContentSchema.parse(values);
+        return {
+            status: 200,
+            message: "Purpose Section Content Updated Successfully.",
+        };
+    } catch (error) {
+        if (error instanceof ZodError) {
+            return {
+                status: 400,
+                errors: error.flatten().fieldErrors as {
+                    [K in keyof PurposeContentSchema]?: string[];
+                },
+                message: "Validation Error",
+            };
+        }
+        return {
+            status: 500,
+            message: "Internal Server Error.",
         };
     }
 }

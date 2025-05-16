@@ -27,9 +27,7 @@ export default function Footer({ logo, instagram, facebook, linkedin, youtube, t
                 <hr className="my-10 border-white" />
                 <div className="grid grid-cols-[1fr_repeat(3,minmax(auto,200px))]">
                     <div className="">
-                        <div className="">
-                            <Image src={logo ?? ""} alt="" width={150} height={80} />
-                        </div>
+                        <div className="">{logo && <Image src={logo ?? ""} alt="" width={150} height={80} />}</div>
                         <div className="flex mt-8 gap-x-6">
                             {instagram && (
                                 <Link className="capitalize" href={instagram}>

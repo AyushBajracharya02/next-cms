@@ -95,7 +95,7 @@ export default function Page() {
                                         <FormItem className="grid grid-cols-[100px_1fr] items-start">
                                             <FormLabel>Content</FormLabel>
                                             <FormControl>
-                                                <Tiptap {...field} {...fieldState} />
+                                                <Tiptap<BlogSchema, "content"> {...field} {...fieldState} />
                                             </FormControl>
                                             <FormMessage className="col-start-2" />
                                         </FormItem>

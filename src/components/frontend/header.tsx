@@ -6,9 +6,7 @@ export default function Header({ logo }: { logo: string | null }) {
         <header className="px-4">
             <nav className="container grid grid-cols-[auto_auto_auto] justify-between h-20">
                 <div className="flex items-center">
-                    <Link href={`/`}>
-                        <Image src={logo ?? ""} alt="" width={150} height={80} />
-                    </Link>
+                    <Link href={`/`}>{logo && <Image src={logo} alt="" width={150} height={80} />}</Link>
                 </div>
                 <ul className="flex">
                     <li className="flex">

@@ -11,3 +11,23 @@ export const bannerContentSchema = z.object({
 });
 
 export type BannerContentSchema = z.infer<typeof bannerContentSchema>;
+
+export const purposeContentSchema = z.object({
+    purpose_title: z.string(),
+    purpose_content: z.string(),
+    purpose_tagline: z.string(),
+    purpose_image: z
+        .instanceof(File)
+        .refine(file => file.size <= 7 * 1024 * 1024, { message: "File size should be less than 7MB." })
+        .refine(file => file.type.startsWith("image/"), { message: "File type should be a video." })
+        .optional(),
+    purpose_stats: z.array(
+        z.object({
+            title: z.string(),
+            subtitle: z.string(),
+            icon: z.string(),
+        })
+    ),
+});
+
+export type PurposeContentSchema = z.infer<typeof purposeContentSchema>;
