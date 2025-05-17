@@ -9,7 +9,12 @@ export default async function Page() {
     return (
         <>
             <BannerContentCard banner_title={homepageContent.banner_title} banner_subtitle={homepageContent.banner_subtitle} />
-            <PurposeContentCard />
+            <PurposeContentCard
+                purpose_title={homepageContent.purpose_title}
+                purpose_tagline={homepageContent.purpose_tagline}
+                purpose_content={homepageContent.purpose_content}
+                purpose_stats={homepageContent.purpose_stats}
+            />
         </>
     );
 }

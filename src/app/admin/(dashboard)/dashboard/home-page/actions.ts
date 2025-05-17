@@ -6,6 +6,7 @@ import { ZodError } from "zod";
 import db from "@/db";
 import fs from "fs/promises";
 import { homepageTable } from "@/db/schema/homepage";
+import { storeFile } from "@/lib/server-utils";
 
 export async function storeBannerContent(values: BannerContentSchema): Promise<ServerResponse<BannerContentSchema>> {
     try {
@@ -56,6 +57,25 @@ export async function storeBannerContent(values: BannerContentSchema): Promise<S
 export async function storePurposeSectionContent(values: PurposeContentSchema): Promise<ServerResponse<PurposeContentSchema>> {
     try {
         purposeContentSchema.parse(values);
+        let purpose_image: string | undefined = undefined;
+        if (values.purpose_image) {
+            storeFile(values.purpose_image, `public/uploads/homepage/`);
+            purpose_image = `uploads/homepage/${values.purpose_image.name}`;
+        }
+        const [currentValues] = await db.select().from(homepageTable).limit(1);
+        if (currentValues) {
+            await db.update(homepageTable).set({
+                ...values,
+                purpose_image,
+                updated_at: new Date(),
+            });
+        } else {
+            await db.insert(homepageTable).values({
+                ...values,
+                purpose_image,
+                updated_at: new Date(),
+            });
+        }
         return {
             status: 200,
             message: "Purpose Section Content Updated Successfully.",

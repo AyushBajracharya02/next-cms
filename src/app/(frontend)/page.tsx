@@ -16,39 +16,31 @@ export default async function Home() {
                 <div className="container">
                     <div className="grid grid-cols-2 gap-x-10 items-center">
                         <div className="">
-                            <div className="">{/* <Image src={OurPurpose} alt="" /> */}</div>
-                            <div className="w-fit bg-brand-highlight-1 py-6 px-10 -mt-11 relative font-semibold text-2xl">
-                                Crafting Success,
-                                <br /> Step By Step
-                            </div>
+                            <div className="">{homepageContent.purpose_image && <Image src={homepageContent.purpose_image} alt="" />}</div>
+                            {homepageContent.purpose_tagline && (
+                                <div className="w-fit bg-brand-highlight-1 py-6 px-10 -mt-11 relative font-semibold text-2xl">
+                                    {homepageContent.purpose_tagline}
+                                </div>
+                            )}
                         </div>
                         <div className="">
-                            <h2 className="text-5xl font-semibold">Our Purpose and Aspiration</h2>
-                            <div className="space-y-6 mt-6">
-                                <p>
-                                    Driven by creativity and excellence, our mission is to transform ideas into impactful digital experiences. We envision a
-                                    future where brands connect with their audiences in meaningful ways.
-                                </p>
-                                <p>
-                                    Integrity, innovation, and collaboration are at the heart of everything we do, guiding us as we create value for our
-                                    clients.
-                                </p>
-                            </div>
-                            <hr className="my-8 border-black" />
-                            <div className="grid grid-cols-2 gap-x-8">
-                                <div>
-                                    <div className="">
-                                        <h4 className="text-3xl font-semibold">Top 10</h4>
-                                        <p className="mt-3 ">Global Companies on Clutch</p>
+                            <h2 className="text-5xl font-semibold">{homepageContent.purpose_title}</h2>
+                            <div className="space-y-6 mt-6" dangerouslySetInnerHTML={{ __html: homepageContent.purpose_content ?? "" }}></div>
+                            {homepageContent.purpose_stats?.length ? (
+                                <>
+                                    <hr className="my-8 border-black" />
+                                    <div className="grid grid-cols-2 gap-x-8">
+                                        {homepageContent.purpose_stats?.map(({ title, subtitle }, index) => (
+                                            <div key={index}>
+                                                <div className="">
+                                                    <h4 className="text-3xl font-semibold">{title}</h4>
+                                                    <p className="mt-3 ">{subtitle}</p>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                </div>
-                                <div>
-                                    <div className="">
-                                        <h4 className="text-3xl font-semibold">95%</h4>
-                                        <p className="mt-3 ">Job Success on Upwork</p>
-                                    </div>
-                                </div>
-                            </div>
+                                </>
+                            ) : null}
                         </div>
                     </div>
                 </div>

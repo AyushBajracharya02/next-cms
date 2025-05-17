@@ -9,16 +9,24 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { PurposeContentSchema, purposeContentSchema } from "./schema";
+import { storePurposeSectionContent } from "./actions";
+import { toast } from "sonner";
+import { Nullable } from "@/types/utility";
 
-export default function PurposeContentCard() {
+export default function PurposeContentCard({
+    purpose_title,
+    purpose_content,
+    purpose_stats,
+    purpose_tagline,
+}: Nullable<Omit<PurposeContentSchema, "purpose_image">>) {
     const form = useForm({
         resolver: zodResolver(purposeContentSchema),
         defaultValues: {
-            purpose_title: "",
-            purpose_content: "",
-            purpose_tagline: "",
+            purpose_title: purpose_title ?? "",
+            purpose_content: purpose_content ?? "",
+            purpose_tagline: purpose_tagline ?? "",
             purpose_image: undefined,
-            purpose_stats: [],
+            purpose_stats: purpose_stats ?? [],
         },
     });
     const { fields, append, remove } = useFieldArray({
@@ -27,8 +35,30 @@ export default function PurposeContentCard() {
     });
     async function updatePurposeContent(values: PurposeContentSchema) {
         try {
-            // const response = u
-        } catch (error) {}
+            const response = await storePurposeSectionContent(values);
+            if (response.status === 200) {
+                toast(response.message, {
+                    className: "!bg-green-700",
+                });
+            }
+            if (response.status === 500) {
+                toast(response.message, {
+                    className: "!bg-red-800",
+                });
+            }
+            if (response.status == 400) {
+                Object.entries(response.errors).forEach(([fields, errors]) => {
+                    if (!errors) {
+                        return;
+                    }
+                    form.setError(fields as keyof PurposeContentSchema, { message: errors[0] });
+                });
+            }
+        } catch (error) {
+            toast((error as Error).message, {
+                className: "!bg-red-800",
+            });
+        }
     }
     return (
         <Card className="mt-6">

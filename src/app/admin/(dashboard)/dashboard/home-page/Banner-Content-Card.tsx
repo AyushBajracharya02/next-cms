@@ -31,10 +31,6 @@ export default function BannerContentCard({ banner_title, banner_subtitle }: Nul
                 });
             }
             if (response.status == 400) {
-                toast(response.message, {
-                    closeButton: true,
-                    className: "!bg-green-700",
-                });
                 Object.entries(response.errors).forEach(([fields, errors]) => {
                     if (!errors) {
                         return;
