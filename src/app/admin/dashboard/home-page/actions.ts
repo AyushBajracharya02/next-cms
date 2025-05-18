@@ -18,7 +18,7 @@ export async function storeBannerContent(values: BannerContentSchema): Promise<S
             const buffer = Buffer.from(arrayBuffer);
             const filePath = `public/uploads/homepage/${videoFile.name}`;
             await fs.writeFile(filePath, buffer);
-            banner_video = `uploads/homepage/${videoFile.name}`;
+            banner_video = `/uploads/homepage/${videoFile.name}`;
         }
         const [currentValues] = await db.select().from(homepageTable).limit(1);
         if (currentValues) {
@@ -60,7 +60,7 @@ export async function storePurposeSectionContent(values: PurposeContentSchema): 
         let purpose_image: string | undefined = undefined;
         if (values.purpose_image) {
             storeFile(values.purpose_image, `public/uploads/homepage/`);
-            purpose_image = `uploads/homepage/${values.purpose_image.name}`;
+            purpose_image = `/uploads/homepage/${values.purpose_image.name}`;
         }
         const [currentValues] = await db.select().from(homepageTable).limit(1);
         if (currentValues) {

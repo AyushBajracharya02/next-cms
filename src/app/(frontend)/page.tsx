@@ -16,7 +16,9 @@ export default async function Home() {
                 <div className="container">
                     <div className="grid grid-cols-2 gap-x-10 items-center">
                         <div className="">
-                            <div className="">{homepageContent.purpose_image && <Image src={homepageContent.purpose_image} alt="" />}</div>
+                            <div className="">
+                                {homepageContent.purpose_image && <Image src={`${homepageContent.purpose_image}`} alt="" width={570} height={700} />}
+                            </div>
                             {homepageContent.purpose_tagline && (
                                 <div className="w-fit bg-brand-highlight-1 py-6 px-10 -mt-11 relative font-semibold text-2xl">
                                     {homepageContent.purpose_tagline}

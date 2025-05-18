@@ -29,6 +29,7 @@ export default async function RootLayout({
         .from(site_settings)
         .limit(1);
     companyInfo = companyInfo ?? {};
+
     return (
         <html lang="en">
             <body className={`antialiased bg-red`}>
