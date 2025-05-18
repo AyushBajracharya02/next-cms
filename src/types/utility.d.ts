@@ -10,4 +10,5 @@ export type ServerResponse<T> = (
               [k in keyof T]?: string[];
           };
       }
+    | { status: 409 }
 ) & { message: string };

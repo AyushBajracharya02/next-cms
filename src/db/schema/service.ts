@@ -3,7 +3,7 @@ import { timestamps } from "./common";
 
 export const serviceTable = mysqlTable("service", {
     id: int().primaryKey().autoincrement(),
-    name: varchar({ length: 256 }).notNull(),
-    active: boolean().notNull().default(false),
+    name: varchar({ length: 256 }).notNull().unique(),
+    active_status: boolean().notNull().default(false),
     ...timestamps,
 });

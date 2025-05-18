@@ -1,26 +1,18 @@
-import CardTitle from "@/components/admin/CardTitle";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Plus } from "lucide-react";
-import ServiceTable from "./components/ServiceTable";
+import db from "@/db";
+import { serviceTable } from "@/db/schema/service";
+import ServiceCard from "./components/ServiceCard";
 
-export default function Page() {
+export default async function Page() {
+    const services = await db
+        .select({
+            id: serviceTable.id,
+            name: serviceTable.name,
+            active: serviceTable.active_status,
+        })
+        .from(serviceTable);
     return (
         <>
-            <Card>
-                <CardHeader>
-                    <div className="flex justify-between items-center">
-                        <CardTitle>Services</CardTitle>
-                        <Button variant="outline">
-                            <Plus />
-                            Add Service
-                        </Button>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <ServiceTable />
-                </CardContent>
-            </Card>
+            <ServiceCard services={services} />
         </>
     );
 }
