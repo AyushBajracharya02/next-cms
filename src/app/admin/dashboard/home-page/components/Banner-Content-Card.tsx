@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { BannerContentSchema, bannerContentSchema } from "./schema";
-import { storeBannerContent } from "./actions";
+import { BannerContentSchema, bannerContentSchema } from "../schema";
+import { storeBannerContent } from "../actions";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";

@@ -1,12 +1,13 @@
 "use server";
 
 import { ServerResponse } from "@/types/utility";
-import { BannerContentSchema, bannerContentSchema, purposeContentSchema, PurposeContentSchema } from "./schema";
+import { BannerContentSchema, bannerContentSchema, purposeContentSchema, PurposeContentSchema, serviceSectionSchema, ServiceSectionSchema } from "./schema";
 import { ZodError } from "zod";
 import db from "@/db";
 import fs from "fs/promises";
 import { homepageTable } from "@/db/schema/homepage";
 import { storeFile } from "@/lib/server-utils";
+import { homepage_service_entries } from "@/db/schema/homepage_service";
 
 export async function storeBannerContent(values: BannerContentSchema): Promise<ServerResponse<BannerContentSchema>> {
     try {
@@ -93,6 +94,31 @@ export async function storePurposeSectionContent(values: PurposeContentSchema): 
         return {
             status: 500,
             message: "Internal Server Error.",
+        };
+    }
+}
+
+export async function storeHomepageServiceContent(values: ServiceSectionSchema): Promise<ServerResponse<ServiceSectionSchema>> {
+    try {
+        serviceSectionSchema.parse(values);
+        await storeFile(values.image, "/public/uploads/homepage");
+        const image = `/uploads/homepage/${values.image.name}`;
+        await db.insert(homepage_service_entries).values({ ...values, image });
+        return {
+            status: 200,
+            message: "Stored Content Successfully",
+        };
+    } catch (error) {
+        if (error instanceof ZodError) {
+            return {
+                status: 400,
+                message: "Validation Error",
+                errors: error.flatten().fieldErrors,
+            };
+        }
+        return {
+            status: 500,
+            message: (error as Error).message,
         };
     }
 }

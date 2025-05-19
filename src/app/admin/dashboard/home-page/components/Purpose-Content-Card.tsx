@@ -8,8 +8,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { PurposeContentSchema, purposeContentSchema } from "./schema";
-import { storePurposeSectionContent } from "./actions";
+import { PurposeContentSchema, purposeContentSchema } from "../schema";
+import { storePurposeSectionContent } from "../actions";
 import { toast } from "sonner";
 import { Nullable } from "@/types/utility";
 

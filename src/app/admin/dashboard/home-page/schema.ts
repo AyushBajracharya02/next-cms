@@ -31,3 +31,14 @@ export const purposeContentSchema = z.object({
 });
 
 export type PurposeContentSchema = z.infer<typeof purposeContentSchema>;
+
+export const serviceSectionSchema = z.object({
+    service_id: z.string({ message: "Please select a service." }).transform(id => Number(id)),
+    description: z.string().min(1, "Description must be atleast 1 character."),
+    image: z
+        .instanceof(File, { message: "Please select an image file." })
+        .refine(file => file.size <= 2 * 1024 * 1024, "File must be less than 2MB")
+        .refine(file => file.type.startsWith("image/"), "File must be an image"),
+});
+
+export type ServiceSectionSchema = z.infer<typeof serviceSectionSchema>;

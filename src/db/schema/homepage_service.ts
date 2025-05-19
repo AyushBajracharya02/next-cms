@@ -7,7 +7,7 @@ export const homepage_service_entries = mysqlTable("homepage_service_entries", {
     service_id: int()
         .references(() => serviceTable.id)
         .notNull(),
-    description: varchar({ length: 2048 }),
-    image: varchar({ length: 2048 }),
+    description: varchar({ length: 2048 }).notNull(),
+    image: varchar({ length: 2048 }).notNull(),
     ...timestamps,
 });
