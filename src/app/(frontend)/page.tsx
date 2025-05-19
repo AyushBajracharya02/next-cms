@@ -3,12 +3,24 @@ import OurSolution from "@/components/frontend/our-solutions";
 import SuccessfulProject from "@/components/frontend/successfull-projects";
 import db from "@/db";
 import { homepageTable } from "@/db/schema/homepage";
+import { homepage_service_entries } from "@/db/schema/homepage_service";
+import { serviceTable } from "@/db/schema/service";
 import Image from "next/image";
 import Link from "next/link";
+import { eq } from "drizzle-orm";
 
 export default async function Home() {
     let [homepageContent] = await db.select().from(homepageTable).limit(1);
     homepageContent = homepageContent ?? {};
+    const homepage_service_content = await db
+        .select({
+            id: homepage_service_entries.id,
+            service: serviceTable.name,
+            description: homepage_service_entries.description,
+            image: homepage_service_entries.image,
+        })
+        .from(homepage_service_entries)
+        .innerJoin(serviceTable, eq(homepage_service_entries.service_id, serviceTable.id));
     return (
         <>
             <HomeBanner title={homepageContent.banner_title} subtitle={homepageContent.banner_subtitle} video={homepageContent.banner_video} />
@@ -54,8 +66,11 @@ export default async function Home() {
                         <br /> Comprehensive Solutions
                     </h2>
                     <ul className="mt-12 divide-y divide-black">
-                        <li className="py-4">{/* <OurSolution description="lorem ipsum" heading="Brand Design" src={OurPurpose} index={0} /> */}</li>
-                        <li className="py-4">{/* <OurSolution description="lorem ipsum" heading="Brand Design" src={OurPurpose} index={0} /> */}</li>
+                        {homepage_service_content.map((content, index) => (
+                            <li className="py-4" key={index}>
+                                <OurSolution {...content} index={index} />
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </section>

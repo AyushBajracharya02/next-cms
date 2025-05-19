@@ -100,8 +100,10 @@ export async function storePurposeSectionContent(values: PurposeContentSchema): 
 
 export async function storeHomepageServiceContent(values: ServiceSectionSchema): Promise<ServerResponse<ServiceSectionSchema>> {
     try {
+        console.log(values);
+
         serviceSectionSchema.parse(values);
-        await storeFile(values.image, "/public/uploads/homepage");
+        await storeFile(values.image, "public/uploads/homepage");
         const image = `/uploads/homepage/${values.image.name}`;
         await db.insert(homepage_service_entries).values({ ...values, image });
         return {

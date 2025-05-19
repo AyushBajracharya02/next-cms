@@ -6,15 +6,15 @@ import { ServiceContextProvider } from "../hooks/useServiceContext";
 
 export default function ServiceCard({ services }: { services: ServiceUpdateSchema[] }) {
     return (
-        <ServiceContextProvider initialServices={services}>
-            <Card>
+        <Card>
+            <ServiceContextProvider initialServices={services}>
                 <CardHeader>
                     <ServiceCardHeader />
                 </CardHeader>
                 <CardContent>
                     <ServiceTable />
                 </CardContent>
-            </Card>
-        </ServiceContextProvider>
+            </ServiceContextProvider>
+        </Card>
     );
 }

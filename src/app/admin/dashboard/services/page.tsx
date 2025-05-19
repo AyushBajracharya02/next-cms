@@ -7,7 +7,7 @@ export default async function Page() {
         .select({
             id: serviceTable.id,
             name: serviceTable.name,
-            active: serviceTable.active_status,
+            active_status: serviceTable.active_status,
         })
         .from(serviceTable);
     return (

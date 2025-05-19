@@ -1,3 +1,5 @@
+import { homepage_service_entries } from "@/db/schema/homepage_service";
+import { serviceTable } from "@/db/schema/service";
 import { z } from "zod";
 
 export const bannerContentSchema = z.object({
@@ -33,7 +35,7 @@ export const purposeContentSchema = z.object({
 export type PurposeContentSchema = z.infer<typeof purposeContentSchema>;
 
 export const serviceSectionSchema = z.object({
-    service_id: z.string({ message: "Please select a service." }).transform(id => Number(id)),
+    service_id: z.preprocess(id => (typeof id === "string" ? Number(id) : id), z.number({ message: "Please select a service." })),
     description: z.string().min(1, "Description must be atleast 1 character."),
     image: z
         .instanceof(File, { message: "Please select an image file." })
@@ -42,3 +44,7 @@ export const serviceSectionSchema = z.object({
 });
 
 export type ServiceSectionSchema = z.infer<typeof serviceSectionSchema>;
+
+export type Service = typeof serviceTable.$inferSelect;
+
+export type HomepageServiceContent = typeof homepage_service_entries.$inferSelect;
