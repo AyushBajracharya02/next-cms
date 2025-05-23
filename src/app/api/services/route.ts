@@ -2,25 +2,29 @@ import db from "@/db";
 import { homepage_service_entries } from "@/db/schema/homepage_service";
 import { serviceTable } from "@/db/schema/service";
 import { NextRequest, NextResponse } from "next/server";
-import { eq, isNull } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { parseBool } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
+    let query = db
+        .select({
+            id: serviceTable.id,
+            name: serviceTable.name,
+            active_status: serviceTable.active_status,
+        })
+        .from(serviceTable)
+        .$dynamic();
     // const fieldsParams = req.nextUrl.searchParams.get("fields");
     const unreferencedTableParams = req.nextUrl.searchParams.get("unreferenced_in");
-    const active_status = parseBool(req.nextUrl.searchParams.get("active_status") ?? "");
-    try {
-        let query = db
-            .select({
-                id: serviceTable.id,
-                name: serviceTable.name,
-                active_status: serviceTable.active_status,
-                created_at: serviceTable.created_at,
-                updated_at: serviceTable.updated_at,
-            })
-            .from(serviceTable)
-            .$dynamic();
+    const activeStatusParam = req.nextUrl.searchParams.get("active_status");
 
+    const conditions = [];
+    if (activeStatusParam) {
+        const active_status = parseBool(activeStatusParam);
+        conditions.push(eq(serviceTable.active_status, active_status));
+    }
+
+    try {
         // const fields = fieldsParams?.split(",").map(field => field.trim()) ?? [];
 
         // const columnMap = {
@@ -48,12 +52,11 @@ export async function GET(req: NextRequest) {
         for (const tableName of unreferenced_in) {
             const table = referencedTables[tableName as keyof typeof referencedTables];
             if (!table) continue;
-            query = query.leftJoin(table, eq(serviceTable.id, table.service_id)).where(isNull(table.id));
+            query = query.leftJoin(table, eq(serviceTable.id, table.service_id));
+            conditions.push(isNull(table.id));
         }
 
-        query = query.where(eq(serviceTable.active_status, active_status));
-
-        const services = await query;
+        const services = await query.where(and(...conditions));
 
         return NextResponse.json(services);
     } catch (error) {

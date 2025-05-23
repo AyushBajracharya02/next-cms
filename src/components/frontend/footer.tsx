@@ -1,6 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Nullable } from "@/types/utility";
+import db from "@/db";
+import { serviceTable } from "@/db/schema/service";
+import { eq } from "drizzle-orm";
 
 type FooterParams = Nullable<{
     logo: string;
@@ -9,9 +12,25 @@ type FooterParams = Nullable<{
     youtube: string;
     tiktok: string;
     linkedin: string;
+    address: string;
+    contact_number_1: string;
+    contact_number_2: string;
+    email: string;
 }>;
 
-export default function Footer({ logo, instagram, facebook, linkedin, youtube, tiktok }: FooterParams) {
+export default async function Footer({
+    logo,
+    instagram,
+    facebook,
+    linkedin,
+    youtube,
+    tiktok,
+    address,
+    contact_number_1,
+    contact_number_2,
+    email,
+}: FooterParams) {
+    const services = await db.select({ name: serviceTable.name }).from(serviceTable).where(eq(serviceTable.active_status, true));
     return (
         <footer className="bg-blue-950 py-10 text-white">
             <div className="container">
@@ -59,18 +78,11 @@ export default function Footer({ logo, instagram, facebook, linkedin, youtube, t
                     <div className="">
                         <h3 className="text-xl">Services</h3>
                         <ul className="space-y-8 mt-8">
-                            <li>
-                                <Link href="">Brand Design</Link>
-                            </li>
-                            <li>
-                                <Link href="">Web Development</Link>
-                            </li>
-                            <li>
-                                <Link href="">Digital Marketing</Link>
-                            </li>
-                            <li>
-                                <Link href="">App Development</Link>
-                            </li>
+                            {services.map(({ name }, index) => (
+                                <li key={index}>
+                                    <Link href="">{name}</Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                     <div className="">
@@ -93,15 +105,27 @@ export default function Footer({ logo, instagram, facebook, linkedin, youtube, t
                     <div className="">
                         <h3 className="text-xl">Contact</h3>
                         <ul className="space-y-8 mt-8">
-                            <li>
-                                <address>455 West Orchard Street Kings Mountain, NC 280867</address>
-                            </li>
-                            <li>
-                                <Link href={""}>+088 (246) 642-27-10</Link>
-                            </li>
-                            <li>
-                                <Link href={""}>example@gmail.com</Link>
-                            </li>
+                            {address && (
+                                <li>
+                                    <address>{address}</address>
+                                </li>
+                            )}
+                            {contact_number_1 && (
+                                <li>
+                                    <Link href={`tel:${contact_number_1}`}>{contact_number_1}</Link>
+                                </li>
+                            )}
+                            {contact_number_2 && (
+                                <li>
+                                    <Link href={`tel:${contact_number_2}`}>{contact_number_2}</Link>
+                                </li>
+                            )}
+
+                            {email && (
+                                <li>
+                                    <Link href={`mailto:${email}`}>{email}</Link>
+                                </li>
+                            )}
                         </ul>
                     </div>
                 </div>

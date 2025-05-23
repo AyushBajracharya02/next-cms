@@ -5,6 +5,13 @@
 
     --color-brand-highlight-1: #b1fb5b;
 }
+
+@layer base {
+    address {
+        @apply not-italic;
+    }
+}
+
 @utility container {
     margin-inline: auto;
     padding-inline: 1rem;

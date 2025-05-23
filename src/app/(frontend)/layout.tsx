@@ -23,8 +23,11 @@ export default async function RootLayout({
             instagram: site_settings.instagram,
             facebook: site_settings.facebook,
             linkedin: site_settings.linkedin,
-            youtube: site_settings.instagram,
+            youtube: site_settings.youtube,
             tiktok: site_settings.tiktok,
+            address: site_settings.address,
+            contact_number_1: site_settings.contact_number_1,
+            contact_number_2: site_settings.contact_number_2,
         })
         .from(site_settings)
         .limit(1);
@@ -42,6 +45,10 @@ export default async function RootLayout({
                     linkedin={companyInfo.linkedin}
                     youtube={companyInfo.youtube}
                     tiktok={companyInfo.tiktok}
+                    address={companyInfo.address}
+                    contact_number_1={companyInfo.contact_number_1}
+                    contact_number_2={companyInfo.contact_number_2}
+                    email={companyInfo.email}
                 />
             </body>
         </html>
