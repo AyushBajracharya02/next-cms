@@ -35,7 +35,7 @@ export const purposeContentSchema = z.object({
 export type PurposeContentSchema = z.infer<typeof purposeContentSchema>;
 
 export const serviceSectionSchema = z.object({
-    service_id: z.preprocess(id => (typeof id === "string" ? Number(id) : id), z.number({ message: "Please select a service." })),
+    service_id: z.preprocess(id => (typeof id === "string" ? Number(id) : id), z.number().int().positive("Please select a valid service.")),
     description: z.string().min(1, "Description must be atleast 1 character."),
     image: z
         .instanceof(File, { message: "Please select an image file." })

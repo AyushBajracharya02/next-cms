@@ -6,6 +6,7 @@ import { serviceTable } from "@/db/schema/service";
 import { eq, isNull, and } from "drizzle-orm";
 import { ServiceContentCard } from "./components/Service-Content-Card";
 import { homepage_service_entries } from "@/db/schema/homepage_service";
+import ProjectsCard from "./components/Projects-Card";
 
 export default async function Page() {
     let [homepageContent] = await db.select().from(homepageTable).limit(1);
@@ -47,6 +48,7 @@ export default async function Page() {
                 purpose_stats={homepageContent.purpose_stats}
             />
             <ServiceContentCard services={services} homepageServiceContent={homepageServiceContent} />
+            <ProjectsCard />
         </>
     );
 }

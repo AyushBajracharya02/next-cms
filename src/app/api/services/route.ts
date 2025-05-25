@@ -14,7 +14,6 @@ export async function GET(req: NextRequest) {
         })
         .from(serviceTable)
         .$dynamic();
-    // const fieldsParams = req.nextUrl.searchParams.get("fields");
     const unreferencedTableParams = req.nextUrl.searchParams.get("unreferenced_in");
     const activeStatusParam = req.nextUrl.searchParams.get("active_status");
 
@@ -23,39 +22,20 @@ export async function GET(req: NextRequest) {
         const active_status = parseBool(activeStatusParam);
         conditions.push(eq(serviceTable.active_status, active_status));
     }
+    const unreferenced_in = unreferencedTableParams?.split(",").map(table => table.trim()) ?? [];
+
+    const referencedTables = {
+        homepage_service_entries: homepage_service_entries,
+    };
+
+    for (const tableName of unreferenced_in) {
+        const table = referencedTables[tableName as keyof typeof referencedTables];
+        if (!table) continue;
+        query = query.leftJoin(table, eq(serviceTable.id, table.service_id));
+        conditions.push(isNull(table.id));
+    }
 
     try {
-        // const fields = fieldsParams?.split(",").map(field => field.trim()) ?? [];
-
-        // const columnMap = {
-        //     id: serviceTable.id,
-        //     name: serviceTable.name,
-        //     active_status: serviceTable.active_status,
-        //     created_at: serviceTable.created_at,
-        //     updated_at: serviceTable.updated_at,
-        // };
-
-        // const selectedColumns =
-        //     fields.length > 0
-        //         ? fields.reduce((filteredColumns, field) => {
-        //               filteredColumns[field] = columnMap[field];
-        //               return filteredColumns;
-        //           }, {})
-        //         : columnMap;
-
-        const unreferenced_in = unreferencedTableParams?.split(",").map(table => table.trim()) ?? [];
-
-        const referencedTables = {
-            homepage_service_entries: homepage_service_entries,
-        };
-
-        for (const tableName of unreferenced_in) {
-            const table = referencedTables[tableName as keyof typeof referencedTables];
-            if (!table) continue;
-            query = query.leftJoin(table, eq(serviceTable.id, table.service_id));
-            conditions.push(isNull(table.id));
-        }
-
         const services = await query.where(and(...conditions));
 
         return NextResponse.json(services);
