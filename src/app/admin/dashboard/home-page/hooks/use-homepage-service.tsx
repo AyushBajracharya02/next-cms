@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useCallback, useContext, useState } from "react";
-import { HomepageServiceContent, Service } from "../schema";
+import { HomepageServiceContent } from "../schema";
+import { Service } from "@/db/schema/service";
 
 export type HomepageServiceContentRow = HomepageServiceContent & { service_name: string; service_active_status: boolean };
 

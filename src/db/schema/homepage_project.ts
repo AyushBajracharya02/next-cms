@@ -1,11 +1,11 @@
 import { int, mysqlTable, varchar } from "drizzle-orm/mysql-core";
-import { serviceTable } from "./service";
+import { projectTable } from "./project";
 import { timestamps } from "./common";
 
-export const homepage_service_entries = mysqlTable("homepage_service_entries", {
+export const homepage_project_table = mysqlTable("homepage_project", {
     id: int().primaryKey().autoincrement(),
-    service_id: int()
-        .references(() => serviceTable.id)
+    project_id: int()
+        .references(() => projectTable.id)
         .notNull()
         .unique(),
     description: varchar({ length: 2048 }).notNull(),

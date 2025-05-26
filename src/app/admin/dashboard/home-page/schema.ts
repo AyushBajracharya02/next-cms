@@ -1,5 +1,4 @@
 import { homepage_service_entries } from "@/db/schema/homepage_service";
-import { serviceTable } from "@/db/schema/service";
 import { z } from "zod";
 
 export const bannerContentSchema = z.object({
@@ -44,7 +43,5 @@ export const serviceSectionSchema = z.object({
 });
 
 export type ServiceSectionSchema = z.infer<typeof serviceSectionSchema>;
-
-export type Service = typeof serviceTable.$inferSelect;
 
 export type HomepageServiceContent = typeof homepage_service_entries.$inferSelect;

@@ -1,9 +1,10 @@
 import { createContext, ReactNode, useCallback, useContext, useState } from "react";
-import { Service } from "../../home-page/schema";
+import { Project } from "@/db/schema/project";
+
+export type ProjectRow = Omit<Project, "service_id" | "created_at" | "updated_at"> & { service_name: string; service_active_status: boolean };
 
 type ProjectServiceContextType = {
-    availableServices: Service[];
-    projects: [];
+    projects: ProjectRow[];
     refresh: () => void;
 };
 
@@ -19,21 +20,15 @@ export function useProjectServiceContext() {
 
 type ProjectServiceParams = {
     children: ReactNode;
-    initialAvailableServices: Service[];
-    initialProjects: [];
+    initialProjects: ProjectRow[];
 };
 
-export function ProjectServiceProvider({ children, initialAvailableServices, initialProjects }: ProjectServiceParams) {
-    const [availableServices, setAvailableServices] = useState(initialAvailableServices);
+export function ProjectServiceProvider({ children, initialProjects }: ProjectServiceParams) {
     const [projects, setProjects] = useState(initialProjects);
     const refresh = useCallback(async () => {
-        const serviceResponse = await fetch("/api/services?unreferenced_in=project&active_status=true");
-        const serviceData = await serviceResponse.json();
-        setAvailableServices(serviceData);
-
         const projectResponse = await fetch("/api/projects");
         const projectData = await projectResponse.json();
         setProjects(projectData);
     }, []);
-    return <ProjectServiceContext.Provider value={{ availableServices, projects, refresh }}>{children}</ProjectServiceContext.Provider>;
+    return <ProjectServiceContext.Provider value={{ projects, refresh }}>{children}</ProjectServiceContext.Provider>;
 }

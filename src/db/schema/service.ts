@@ -7,3 +7,5 @@ export const serviceTable = mysqlTable("service", {
     active_status: boolean().notNull().default(false),
     ...timestamps,
 });
+
+export type Service = typeof serviceTable.$inferSelect;

@@ -6,30 +6,56 @@ import { CardHeader } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectContent, SelectLabel } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectContent, SelectLabel } from "@radix-ui/react-select";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useProjectServiceContext } from "../hooks/use-project-service";
 import { ProjectSchema, projectSchema } from "../schema";
 import { addProject } from "../actions";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
+import { Service } from "@/db/schema/service";
 
-export default function ProjectsCardHeader() {
+export default function ProjectsCardHeader({ services }: { services: Service[] }) {
     const addProjectForm = useForm({
         resolver: zodResolver(projectSchema),
+        defaultValues: {
+            name: "",
+            description: "",
+            service_id: "",
+        },
     });
-    const { refresh, availableServices } = useProjectServiceContext();
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const { refresh } = useProjectServiceContext();
     async function submitProject(data: ProjectSchema) {
         try {
             const response = await addProject(data);
             if (response.status === 200) {
                 refresh();
+                setDialogOpen(false);
+                toast(response.message, {
+                    className: "!bg-green-700",
+                    closeButton: true,
+                });
+            }
+            if (response.status === 400) {
+                Object.entries(response.errors).forEach(([field, errors]) => {
+                    addProjectForm.setError(field as keyof ProjectSchema, {
+                        message: errors[0],
+                    });
+                });
+            }
+            if (response.status === 500) {
+                toast(response.message, {
+                    className: "!bg-red-800",
+                    closeButton: true,
+                });
             }
         } catch (e) {
             toast((e as Error).message, {
-                className: "bg-red-800",
+                className: "!bg-red-800",
                 closeButton: true,
             });
         }
@@ -38,7 +64,13 @@ export default function ProjectsCardHeader() {
         <CardHeader>
             <div className="flex justify-between">
                 <CardTitle>Projects</CardTitle>
-                <Dialog>
+                <Dialog
+                    open={dialogOpen}
+                    onOpenChange={open => {
+                        setDialogOpen(open);
+                        addProjectForm.reset();
+                    }}
+                >
                     <DialogTrigger asChild>
                         <Button>
                             <Plus /> Add Project
@@ -52,10 +84,10 @@ export default function ProjectsCardHeader() {
                             <Form {...addProjectForm}>
                                 <form onSubmit={addProjectForm.handleSubmit(submitProject)}>
                                     <FormField
-                                        name="title"
+                                        name="name"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Title</FormLabel>
+                                                <FormLabel>Name</FormLabel>
                                                 <FormControl>
                                                     <Input {...field} />
                                                 </FormControl>
@@ -64,9 +96,21 @@ export default function ProjectsCardHeader() {
                                         )}
                                     />
                                     <FormField
-                                        name="service"
+                                        name="description"
+                                        render={({ field }) => (
+                                            <FormItem className="mt-4">
+                                                <FormLabel>Description</FormLabel>
+                                                <FormControl>
+                                                    <Textarea {...field}></Textarea>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        name="service_id"
                                         render={({ field: { name, onBlur, onChange, ref, value, disabled } }) => (
-                                            <FormItem>
+                                            <FormItem className="mt-4">
                                                 <FormLabel>Service</FormLabel>
                                                 <Select value={value} onValueChange={onChange} name={name} disabled={disabled}>
                                                     <SelectTrigger className="w-full" ref={ref} onBlur={onBlur}>
@@ -75,7 +119,7 @@ export default function ProjectsCardHeader() {
                                                     <SelectContent className="w-full">
                                                         <SelectGroup>
                                                             <SelectLabel>Services</SelectLabel>
-                                                            {availableServices.map((service, index) => (
+                                                            {services.map((service, index) => (
                                                                 <SelectItem value={`${service.id}`} key={index}>
                                                                     {service.name}
                                                                 </SelectItem>
@@ -83,9 +127,11 @@ export default function ProjectsCardHeader() {
                                                         </SelectGroup>
                                                     </SelectContent>
                                                 </Select>
+                                                <FormMessage />
                                             </FormItem>
                                         )}
                                     />
+                                    <Button className="mt-4">Submit</Button>
                                 </form>
                             </Form>
                         </div>

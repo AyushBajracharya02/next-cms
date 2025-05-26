@@ -1,6 +1,6 @@
 import { int, mysqlTable, varchar } from "drizzle-orm/mysql-core";
-import { serviceTable } from "./service";
 import { timestamps } from "./common";
+import { serviceTable } from "./service";
 
 export const projectTable = mysqlTable("project", {
     id: int("id").primaryKey().autoincrement(),
@@ -11,3 +11,5 @@ export const projectTable = mysqlTable("project", {
         .notNull(),
     ...timestamps,
 });
+
+export type Project = typeof projectTable.$inferSelect;

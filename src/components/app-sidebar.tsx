@@ -14,7 +14,7 @@ import {
     SidebarMenuSubItem,
 } from "./ui/sidebar";
 
-import { Home, Settings, Book, BriefcaseBusiness } from "lucide-react";
+import { Home, Settings, Book, BriefcaseBusiness, Building } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
 
 export default function AppSidebar() {
@@ -38,6 +38,14 @@ export default function AppSidebar() {
                                     <Link href="/admin/dashboard/services">
                                         <BriefcaseBusiness />
                                         <span>Services</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link href="/admin/dashboard/projects">
+                                        <Building />
+                                        <span>Projects</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
