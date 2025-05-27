@@ -15,7 +15,7 @@ export default function HomeBanner({ title, subtitle, video }: BannerParams) {
             </div>
             <div className="container">
                 <div className="text-white">
-                    <h1 className="text-6xl text-center font-bold leading-[1.3]">{title}</h1>
+                    <h1 className="text-6xl text-center font-bold leading-[1.3] max-w-[850px] mx-auto">{title}</h1>
                     <p className="text-center mt-6">{subtitle}</p>
                     <div className="flex justify-center mt-8">
                         <Link href="" className="btn btn-highlight rounded-full px-8 py-3 font-medium">

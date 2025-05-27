@@ -1,13 +1,25 @@
 "use server";
 
 import { ServerResponse } from "@/types/utility";
-import { BannerContentSchema, bannerContentSchema, purposeContentSchema, PurposeContentSchema, serviceSectionSchema, ServiceSectionSchema } from "./schema";
+import {
+    BannerContentSchema,
+    bannerContentSchema,
+    homepageProjectSchema,
+    HomepageProjectSchema,
+    purposeContentSchema,
+    PurposeContentSchema,
+    serviceSectionSchema,
+    ServiceSectionSchema,
+    whoWeAreSchema,
+    WhoWeAreSchema,
+} from "./schema";
 import { ZodError } from "zod";
 import db from "@/db";
 import fs from "fs/promises";
 import { homepageTable } from "@/db/schema/homepage";
 import { storeFile } from "@/lib/server-utils";
 import { homepage_service_entries } from "@/db/schema/homepage_service";
+import { homepage_project_table } from "@/db/schema/homepage_project";
 
 export async function storeBannerContent(values: BannerContentSchema): Promise<ServerResponse<BannerContentSchema>> {
     try {
@@ -100,8 +112,6 @@ export async function storePurposeSectionContent(values: PurposeContentSchema): 
 
 export async function storeHomepageServiceContent(values: ServiceSectionSchema): Promise<ServerResponse<ServiceSectionSchema>> {
     try {
-        console.log(values);
-
         serviceSectionSchema.parse(values);
         await storeFile(values.image, "public/uploads/homepage");
         const image = `/uploads/homepage/${values.image.name}`;
@@ -109,6 +119,71 @@ export async function storeHomepageServiceContent(values: ServiceSectionSchema):
         return {
             status: 200,
             message: "Stored Content Successfully",
+        };
+    } catch (error) {
+        if (error instanceof ZodError) {
+            return {
+                status: 400,
+                message: "Validation Error",
+                errors: error.flatten().fieldErrors,
+            };
+        }
+        return {
+            status: 500,
+            message: (error as Error).message,
+        };
+    }
+}
+
+export async function storeHomepageProject(values: HomepageProjectSchema): Promise<ServerResponse<HomepageProjectSchema>> {
+    try {
+        homepageProjectSchema.parse(values);
+        await storeFile(values.image, "public/uploads/homepage");
+        const image = `/uploads/homepage/${values.image.name}`;
+        await db.insert(homepage_project_table).values({ ...values, image });
+        return {
+            status: 200,
+            message: "Stored Content Successfully",
+        };
+    } catch (error) {
+        if (error instanceof ZodError) {
+            return {
+                status: 400,
+                message: "Validation Error",
+                errors: error.flatten().fieldErrors,
+            };
+        }
+        return {
+            status: 500,
+            message: (error as Error).message,
+        };
+    }
+}
+
+export async function storeWhoWeAre(values: WhoWeAreSchema): Promise<ServerResponse<WhoWeAreSchema>> {
+    try {
+        whoWeAreSchema.parse(values);
+        let image: string | undefined = undefined;
+        if (values.image) {
+            await storeFile(values.image, "public/uploads/homepage");
+            image = `/uploads/homepage/${values.image.name}`;
+        }
+        const valuesToStore: typeof homepageTable.$inferInsert = {
+            who_we_are_title: values.title,
+            who_we_are_description: values.description,
+        };
+        if (image) {
+            valuesToStore.who_we_are_image = image;
+        }
+        const [currentValues] = await db.select().from(homepageTable).limit(1);
+        if (currentValues) {
+            await db.update(homepageTable).set(valuesToStore);
+        } else {
+            await db.insert(homepageTable).values(valuesToStore);
+        }
+        return {
+            status: 200,
+            message: "Content Stored Successfully",
         };
     } catch (error) {
         if (error instanceof ZodError) {

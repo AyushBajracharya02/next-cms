@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const services = await query.where(and(...conditions));
+        const services = await query.where(and(...conditions)).execute();
 
         return NextResponse.json(services);
     } catch (error) {

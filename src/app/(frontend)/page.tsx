@@ -8,6 +8,8 @@ import { serviceTable } from "@/db/schema/service";
 import Image from "next/image";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
+import { homepage_project_table } from "@/db/schema/homepage_project";
+import { projectTable } from "@/db/schema/project";
 
 export default async function Home() {
     let [homepageContent] = await db.select().from(homepageTable).limit(1);
@@ -21,6 +23,17 @@ export default async function Home() {
         })
         .from(homepage_service_entries)
         .innerJoin(serviceTable, eq(homepage_service_entries.service_id, serviceTable.id));
+    const projects = await db
+        .select({
+            id: homepage_project_table.id,
+            project_name: projectTable.name,
+            description: homepage_project_table.description,
+            image: homepage_project_table.image,
+            service_name: serviceTable.name,
+        })
+        .from(homepage_project_table)
+        .innerJoin(projectTable, eq(homepage_project_table.project_id, projectTable.id))
+        .innerJoin(serviceTable, eq(projectTable.service_id, serviceTable.id));
     return (
         <>
             <HomeBanner title={homepageContent.banner_title} subtitle={homepageContent.banner_subtitle} video={homepageContent.banner_video} />
@@ -68,7 +81,7 @@ export default async function Home() {
                     <ul className="mt-12 divide-y divide-black">
                         {homepage_service_content.map((content, index) => (
                             <li className="py-4" key={index}>
-                                <OurSolution {...content} index={index} />
+                                <OurSolution {...content} index={index + 1} />
                             </li>
                         ))}
                     </ul>
@@ -78,12 +91,11 @@ export default async function Home() {
                 <div className="container">
                     <h2 className="text-center text-5xl font-semibold">Our Successful Projects</h2>
                     <ul className="grid grid-cols-2 gap-10 mt-10">
-                        <li>
-                            {/* <SuccessfulProject description="lorem ipsum" heading="EcoBrand - Green Initiative" tag="Branding" src={SuccessfulProjectImg} /> */}
-                        </li>
-                        <li>
-                            {/* <SuccessfulProject description="lorem ipsum" heading="EcoBrand - Green Initiative" tag="Branding" src={SuccessfulProjectImg} /> */}
-                        </li>
+                        {projects.map(({ description, image, project_name, service_name }, index) => (
+                            <li key={index}>
+                                <SuccessfulProject description={description} heading={project_name} tag={service_name} src={image} />
+                            </li>
+                        ))}
                     </ul>
                     <div className="flex justify-center mt-10">
                         <Link href="" className="btn btn-highlight rounded-full">
@@ -93,21 +105,18 @@ export default async function Home() {
                 </div>
             </section>
             <section className="relative pt-40">
-                <div className="absolute inset-0 pb-20">{/* <Image className="w-full h-full object-cover" src={WhoWeAreImg} alt="" /> */}</div>
+                <div className="absolute inset-0 pb-20">
+                    {homepageContent.who_we_are_image && <Image className="w-full h-full object-cover" src={homepageContent.who_we_are_image} fill alt="" />}
+                </div>
                 <div className="container relative z-1">
                     <div className="bg-brand-highlight-1 p-12 max-w-xl ml-auto space-y-10">
-                        <h2 className="text-5xl font-semibold">Who We Are</h2>
-                        <div className="prose">
-                            <p>
-                                We are passionate digital pioneers dedicated to transforming your ideas into impactful realities. With a strong foundation in
-                                creativity and innovation, we specialize in delivering tailored solutions that empower brands to thrive in the digital age.
-                            </p>
-                            <p>
-                                Our team of seasoned experts brings together a wealth of experience in brand design, web development, digital marketing, and app
-                                development. We believe in a client-centric approach, working closely with you to understand your vision and craft strategies
-                                that align with your goals.
-                            </p>
-                        </div>
+                        {homepageContent.who_we_are_title && <h2 className="text-5xl font-semibold">{homepageContent.who_we_are_title}</h2>}
+                        <div
+                            className="prose"
+                            dangerouslySetInnerHTML={{
+                                __html: homepageContent.who_we_are_description ?? "",
+                            }}
+                        ></div>
                         <Link className="btn btn-dark rounded-full" href="">
                             More About Us
                         </Link>

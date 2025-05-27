@@ -30,5 +30,7 @@ export default function HomepageServiceTable() {
             cell: ({ row }) => <Image src={row.original.image} alt="" width={350} height={75} />,
         },
     ];
+    console.log(serviceContent);
+
     return <DataTable data={serviceContent} columns={columns} />;
 }

@@ -7,6 +7,9 @@ import { eq, isNull, and } from "drizzle-orm";
 import { ServiceContentCard } from "./components/Service-Content-Card";
 import { homepage_service_entries } from "@/db/schema/homepage_service";
 import ProjectsCard from "./components/Projects-Card";
+import { homepage_project_table } from "@/db/schema/homepage_project";
+import { projectTable } from "@/db/schema/project";
+import WhoWeAreCard from "./components/Who-We-Are-Card";
 
 export default async function Page() {
     let [homepageContent] = await db.select().from(homepageTable).limit(1);
@@ -38,6 +41,28 @@ export default async function Page() {
         .from(homepage_service_entries)
         .innerJoin(serviceTable, eq(homepage_service_entries.service_id, serviceTable.id));
 
+    const homepageProjects = await db
+        .select({
+            id: homepage_project_table.id,
+            project_name: projectTable.name,
+            description: homepage_project_table.description,
+            image: homepage_project_table.image,
+            service_name: serviceTable.name,
+            service_active_status: serviceTable.active_status,
+        })
+        .from(homepage_project_table)
+        .innerJoin(projectTable, eq(homepage_project_table.project_id, projectTable.id))
+        .innerJoin(serviceTable, eq(projectTable.service_id, serviceTable.id));
+
+    const projects = await db
+        .select({
+            id: projectTable.id,
+            name: projectTable.name,
+        })
+        .from(projectTable)
+        .leftJoin(homepage_project_table, eq(projectTable.id, homepage_project_table.project_id))
+        .where(isNull(homepage_project_table.project_id));
+
     return (
         <>
             <BannerContentCard banner_title={homepageContent.banner_title} banner_subtitle={homepageContent.banner_subtitle} />
@@ -48,7 +73,12 @@ export default async function Page() {
                 purpose_stats={homepageContent.purpose_stats}
             />
             <ServiceContentCard services={services} homepageServiceContent={homepageServiceContent} />
-            <ProjectsCard />
+            <ProjectsCard availableProjects={projects} homepageProjects={homepageProjects} />
+            <WhoWeAreCard
+                title={homepageContent.who_we_are_title}
+                description={homepageContent.who_we_are_description}
+                image={homepageContent.who_we_are_image}
+            />
         </>
     );
 }

@@ -1,10 +1,10 @@
 "use client";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Service } from "../schema";
 import ServiceContentCardHeader from "./Service-Content-CardHeader";
 import { HomepageServiceContentRow, HomepageServiceProvider } from "../hooks/use-homepage-service";
 import HomepageServiceTable from "./Homepage-Service-Table";
+import { Service } from "@/db/schema/service";
 
 export function ServiceContentCard({ services, homepageServiceContent }: { services: Service[]; homepageServiceContent: HomepageServiceContentRow[] }) {
     return (

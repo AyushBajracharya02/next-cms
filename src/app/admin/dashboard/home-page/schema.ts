@@ -45,3 +45,34 @@ export const serviceSectionSchema = z.object({
 export type ServiceSectionSchema = z.infer<typeof serviceSectionSchema>;
 
 export type HomepageServiceContent = typeof homepage_service_entries.$inferSelect;
+
+export const homepageProjectSchema = z.object({
+    project_id: z.preprocess(val => (typeof val === "string" ? Number(val) : val), z.number().int().positive()),
+    description: z.string().min(1, "Description is required"),
+    image: z
+        .instanceof(File)
+        .refine(file => file.size < 2 * 1024 * 1024, {
+            message: "Image size must be less than 2MB",
+        })
+        .refine(file => file.type.startsWith("image/"), {
+            message: "File must be an image.",
+        }),
+});
+
+export type HomepageProjectSchema = z.infer<typeof homepageProjectSchema>;
+
+export const whoWeAreSchema = z.object({
+    title: z.string().min(1, "Title is required"),
+    description: z.string().min(1, "Description is required"),
+    image: z
+        .instanceof(File)
+        .refine(file => file.size < 2 * 1024 * 1024, {
+            message: "Image must be less than 2MB",
+        })
+        .refine(file => file.type.startsWith("image/"), {
+            message: "File must be an image",
+        })
+        .optional(),
+});
+
+export type WhoWeAreSchema = z.infer<typeof whoWeAreSchema>;
