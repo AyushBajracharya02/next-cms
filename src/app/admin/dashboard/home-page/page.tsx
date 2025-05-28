@@ -10,6 +10,7 @@ import ProjectsCard from "./components/Projects-Card";
 import { homepage_project_table } from "@/db/schema/homepage_project";
 import { projectTable } from "@/db/schema/project";
 import WhoWeAreCard from "./components/Who-We-Are-Card";
+import MileStoneCard from "./components/Milestone-Card";
 
 export default async function Page() {
     let [homepageContent] = await db.select().from(homepageTable).limit(1);
@@ -37,6 +38,7 @@ export default async function Page() {
             updated_at: homepage_service_entries.updated_at,
             service_id: homepage_service_entries.service_id,
             service_active_status: serviceTable.active_status,
+            active_status: homepage_service_entries.active_status,
         })
         .from(homepage_service_entries)
         .innerJoin(serviceTable, eq(homepage_service_entries.service_id, serviceTable.id));
@@ -49,6 +51,7 @@ export default async function Page() {
             image: homepage_project_table.image,
             service_name: serviceTable.name,
             service_active_status: serviceTable.active_status,
+            active_status: homepage_project_table.active_status,
         })
         .from(homepage_project_table)
         .innerJoin(projectTable, eq(homepage_project_table.project_id, projectTable.id))
@@ -79,6 +82,7 @@ export default async function Page() {
                 description={homepageContent.who_we_are_description}
                 image={homepageContent.who_we_are_image}
             />
+            <MileStoneCard />
         </>
     );
 }

@@ -29,6 +29,11 @@ export default function Header({ logo }: { logo: string | null }) {
                             Contact
                         </Link>
                     </li>
+                    <li className="flex">
+                        <Link className="flex items-center px-2" href={`/blogs`}>
+                            Blogs
+                        </Link>
+                    </li>
                 </ul>
                 <div className="flex items-center">
                     <Link className="btn btn-dark rounded-full px-8 py-4 font-medium" href={`/contact`}>

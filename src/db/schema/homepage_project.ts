@@ -1,4 +1,4 @@
-import { int, mysqlTable, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlTable, varchar, boolean } from "drizzle-orm/mysql-core";
 import { projectTable } from "./project";
 import { timestamps } from "./common";
 
@@ -10,6 +10,7 @@ export const homepage_project_table = mysqlTable("homepage_project", {
         .unique(),
     description: varchar({ length: 2048 }).notNull(),
     image: varchar({ length: 2048 }).notNull(),
+    active_status: boolean().notNull().default(false),
     ...timestamps,
 });
 

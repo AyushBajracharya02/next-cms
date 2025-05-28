@@ -1,4 +1,4 @@
-import { int, mysqlTable, varchar } from "drizzle-orm/mysql-core";
+import { boolean, int, mysqlTable, varchar } from "drizzle-orm/mysql-core";
 import { serviceTable } from "./service";
 import { timestamps } from "./common";
 
@@ -10,5 +10,6 @@ export const homepage_service_entries = mysqlTable("homepage_service_entries", {
         .unique(),
     description: varchar({ length: 2048 }).notNull(),
     image: varchar({ length: 2048 }).notNull(),
+    active_status: boolean().notNull().default(false),
     ...timestamps,
 });

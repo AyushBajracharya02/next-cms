@@ -51,7 +51,10 @@ export async function updateService(values: ServiceUpdateSchema): Promise<Server
                 };
             }
         }
-        await db.update(serviceTable).set(values).where(eq(serviceTable.id, values.id));
+        await db
+            .update(serviceTable)
+            .set({ ...values, updated_at: new Date() })
+            .where(eq(serviceTable.id, values.id));
         return {
             status: 200,
             message: "Service updated successfully",

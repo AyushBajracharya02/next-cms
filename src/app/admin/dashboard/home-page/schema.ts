@@ -1,5 +1,5 @@
 import { homepage_service_entries } from "@/db/schema/homepage_service";
-import { z } from "zod";
+import { number, z } from "zod";
 
 export const bannerContentSchema = z.object({
     banner_title: z.string(),
@@ -44,6 +44,17 @@ export const serviceSectionSchema = z.object({
 
 export type ServiceSectionSchema = z.infer<typeof serviceSectionSchema>;
 
+export const serviceSectionUpdateSchema = serviceSectionSchema
+    .extend({
+        active_status: z.boolean(),
+    })
+    .partial()
+    .extend({
+        id: z.number().positive().int(),
+    });
+
+export type ServiceSectionUpdateSchema = z.infer<typeof serviceSectionUpdateSchema>;
+
 export type HomepageServiceContent = typeof homepage_service_entries.$inferSelect;
 
 export const homepageProjectSchema = z.object({
@@ -61,6 +72,15 @@ export const homepageProjectSchema = z.object({
 
 export type HomepageProjectSchema = z.infer<typeof homepageProjectSchema>;
 
+export const homepageProjectUpdateSchema = homepageProjectSchema
+    .extend({
+        active_status: z.boolean(),
+    })
+    .partial()
+    .extend({ id: number().int().positive() });
+
+export type HomepageProjectUpdateSchema = z.infer<typeof homepageProjectUpdateSchema>;
+
 export const whoWeAreSchema = z.object({
     title: z.string().min(1, "Title is required"),
     description: z.string().min(1, "Description is required"),
@@ -76,3 +96,16 @@ export const whoWeAreSchema = z.object({
 });
 
 export type WhoWeAreSchema = z.infer<typeof whoWeAreSchema>;
+
+export const milestoneContentSchema = z.object({
+    milestone_title: z.string().min(1, "Title is required"),
+    milestone_description: z.string().min(1, "Description is required"),
+    milestone_stats: z.array(
+        z.object({
+            title: z.string().min(1),
+            value: z.string().min(1),
+        })
+    ),
+});
+
+export type MilestoneContentSchema = z.infer<typeof milestoneContentSchema>;

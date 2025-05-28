@@ -20,5 +20,13 @@ export const homepageTable = mysqlTable("homepage", {
     who_we_are_title: varchar({ length: 256 }),
     who_we_are_description: longtext(),
     who_we_are_image: varchar({ length: 2048 }),
+    milestone_title: varchar({ length: 256 }),
+    milestone_description: longtext(),
+    milestone_stats: json().$type<
+        {
+            title: string;
+            value: string;
+        }[]
+    >(),
     ...timestamps,
 });

@@ -22,6 +22,7 @@ export default async function Home() {
             image: homepage_service_entries.image,
         })
         .from(homepage_service_entries)
+        .where(eq(homepage_service_entries.active_status, true))
         .innerJoin(serviceTable, eq(homepage_service_entries.service_id, serviceTable.id));
     const projects = await db
         .select({
@@ -32,6 +33,7 @@ export default async function Home() {
             service_name: serviceTable.name,
         })
         .from(homepage_project_table)
+        .where(eq(homepage_project_table.active_status, true))
         .innerJoin(projectTable, eq(homepage_project_table.project_id, projectTable.id))
         .innerJoin(serviceTable, eq(projectTable.service_id, serviceTable.id));
     return (
@@ -105,7 +107,7 @@ export default async function Home() {
                 </div>
             </section>
             <section className="relative pt-40">
-                <div className="absolute inset-0 pb-20">
+                <div className="absolute inset-0 h-9/10 pb-20">
                     {homepageContent.who_we_are_image && <Image className="w-full h-full object-cover" src={homepageContent.who_we_are_image} fill alt="" />}
                 </div>
                 <div className="container relative z-1">
@@ -126,23 +128,23 @@ export default async function Home() {
             <section className="py-10">
                 <div className="container">
                     <div className="max-w-xl">
-                        <h2 className="text-5xl font-semibold">Bring Your Ideas to life</h2>
-                        <p className="mt-4">
-                            From startups to established enterprises, we partner with businesses across industries to create exceptional digital experiences.
-                        </p>
+                        {homepageContent.milestone_title && <h2 className="text-5xl font-semibold">{homepageContent.milestone_title}</h2>}
+                        {homepageContent.milestone_description && <p className="mt-4">{homepageContent.milestone_description}</p>}
                     </div>
                     <hr className="my-10 border-black" />
                     <ul className="grid grid-cols-4 gap-x-8">
-                        <li>
-                            <div className="flex items-center gap-x-6">
-                                <span className="text-7xl">10</span>
-                                <span>Years of Experience</span>
-                            </div>
-                        </li>
+                        {homepageContent.milestone_stats?.map(({ title, value }, index) => (
+                            <li key={index}>
+                                <div className="flex items-center gap-x-6">
+                                    <span className="text-7xl">{value}</span>
+                                    <span>{title}</span>
+                                </div>
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </section>
-            <section className="py-10">
+            <section className="py-10" hidden>
                 <div className="container">
                     <div className="flex items-center justify-between">
                         <div className="max-w-xl">

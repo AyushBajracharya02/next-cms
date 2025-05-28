@@ -52,7 +52,7 @@ export default function WhoWeAreCard({ title, description, image }: Nullable<Omi
         }
     }
     return (
-        <Card>
+        <Card className="mt-6">
             <CardHeader>
                 <CardTitle>Who We Are Content</CardTitle>
             </CardHeader>

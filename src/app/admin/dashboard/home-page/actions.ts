@@ -6,10 +6,16 @@ import {
     bannerContentSchema,
     homepageProjectSchema,
     HomepageProjectSchema,
+    homepageProjectUpdateSchema,
+    HomepageProjectUpdateSchema,
+    milestoneContentSchema,
+    MilestoneContentSchema,
     purposeContentSchema,
     PurposeContentSchema,
     serviceSectionSchema,
     ServiceSectionSchema,
+    ServiceSectionUpdateSchema,
+    serviceSectionUpdateSchema,
     whoWeAreSchema,
     WhoWeAreSchema,
 } from "./schema";
@@ -20,6 +26,7 @@ import { homepageTable } from "@/db/schema/homepage";
 import { storeFile } from "@/lib/server-utils";
 import { homepage_service_entries } from "@/db/schema/homepage_service";
 import { homepage_project_table } from "@/db/schema/homepage_project";
+import { eq } from "drizzle-orm";
 
 export async function storeBannerContent(values: BannerContentSchema): Promise<ServerResponse<BannerContentSchema>> {
     try {
@@ -135,12 +142,92 @@ export async function storeHomepageServiceContent(values: ServiceSectionSchema):
     }
 }
 
+export async function updateHomepageService(values: ServiceSectionUpdateSchema): Promise<ServerResponse<ServiceSectionUpdateSchema>> {
+    try {
+        serviceSectionUpdateSchema.parse(values);
+        const valuesToStore: Partial<typeof homepage_service_entries.$inferInsert> = {};
+        if (values.description !== undefined) {
+            valuesToStore.description = values.description;
+        }
+        if (values.image !== undefined) {
+            await storeFile(values.image, "public/uploads/homepage");
+            valuesToStore.image = `/uploads/homepage/${values.image.name}`;
+        }
+        if (values.active_status !== undefined) {
+            valuesToStore.active_status = values.active_status;
+        }
+        if (values.service_id !== undefined) {
+            valuesToStore.service_id = values.service_id;
+        }
+        await db
+            .update(homepage_service_entries)
+            .set({ ...valuesToStore, updated_at: new Date() })
+            .where(eq(homepage_service_entries.id, values.id));
+        return {
+            status: 200,
+            message: "Content Updated Successfully",
+        };
+    } catch (error) {
+        if (error instanceof ZodError) {
+            return {
+                status: 400,
+                message: "Validation Error",
+                errors: error.flatten().fieldErrors,
+            };
+        }
+        return {
+            status: 500,
+            message: (error as Error).message,
+        };
+    }
+}
+
 export async function storeHomepageProject(values: HomepageProjectSchema): Promise<ServerResponse<HomepageProjectSchema>> {
     try {
         homepageProjectSchema.parse(values);
         await storeFile(values.image, "public/uploads/homepage");
         const image = `/uploads/homepage/${values.image.name}`;
         await db.insert(homepage_project_table).values({ ...values, image });
+        return {
+            status: 200,
+            message: "Stored Content Successfully",
+        };
+    } catch (error) {
+        if (error instanceof ZodError) {
+            return {
+                status: 400,
+                message: "Validation Error",
+                errors: error.flatten().fieldErrors,
+            };
+        }
+        return {
+            status: 500,
+            message: (error as Error).message,
+        };
+    }
+}
+
+export async function updateHomepageProject(values: HomepageProjectUpdateSchema): Promise<ServerResponse<HomepageProjectUpdateSchema>> {
+    try {
+        homepageProjectUpdateSchema.parse(values);
+        const valuesToStore: Partial<typeof homepage_project_table.$inferInsert> = {};
+        if (values.description !== undefined) {
+            valuesToStore.description = values.description;
+        }
+        if (values.active_status !== undefined) {
+            valuesToStore.active_status = values.active_status;
+        }
+        if (values.project_id !== undefined) {
+            valuesToStore.project_id = values.project_id;
+        }
+        if (values.image !== undefined) {
+            await storeFile(values.image, "public/uploads/homepage");
+            valuesToStore.image = `/uploads/homepage/${values.image.name}`;
+        }
+        await db
+            .update(homepage_project_table)
+            .set({ ...valuesToStore, updated_at: new Date() })
+            .where(eq(homepage_project_table.id, values.id));
         return {
             status: 200,
             message: "Stored Content Successfully",
@@ -180,6 +267,34 @@ export async function storeWhoWeAre(values: WhoWeAreSchema): Promise<ServerRespo
             await db.update(homepageTable).set(valuesToStore);
         } else {
             await db.insert(homepageTable).values(valuesToStore);
+        }
+        return {
+            status: 200,
+            message: "Content Stored Successfully",
+        };
+    } catch (error) {
+        if (error instanceof ZodError) {
+            return {
+                status: 400,
+                message: "Validation Error",
+                errors: error.flatten().fieldErrors,
+            };
+        }
+        return {
+            status: 500,
+            message: (error as Error).message,
+        };
+    }
+}
+
+export async function storeMilestoneContent(values: MilestoneContentSchema): Promise<ServerResponse<MilestoneContentSchema>> {
+    try {
+        milestoneContentSchema.parse(values);
+        const [currentValues] = await db.select().from(homepageTable).limit(1);
+        if (currentValues) {
+            await db.update(homepageTable).set(values);
+        } else {
+            await db.insert(homepageTable).values(values);
         }
         return {
             status: 200,
