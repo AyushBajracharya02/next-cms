@@ -16,6 +16,7 @@ export async function GET() {
                 created_at: homepage_service_entries.created_at,
                 updated_at: homepage_service_entries.updated_at,
                 service_active_status: serviceTable.active_status,
+                active_status: homepage_service_entries.active_status,
             })
             .from(homepage_service_entries)
             .innerJoin(serviceTable, eq(homepage_service_entries.service_id, serviceTable.id));
